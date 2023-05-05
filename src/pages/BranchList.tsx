@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { useState } from 'react'
 import { Button, Table } from 'react-bootstrap'
 
 import Branch from '../BranchMan/Branch'
@@ -8,7 +7,7 @@ import BranchEdit from '../BranchMan/BranchEdit'
 import BranchDel from '../BranchMan/BranchDel'
 
 export default function BranchList() {
-    const [loading, setLoad] = useState<boolean>(false)
+    const [loading, setLoad] = useState<boolean>(false);
     const [spring, setSpring] = useState<Branch[]>([])
     const [loadingAuth, setLoadingAuth] = useState(false)
 
@@ -17,15 +16,7 @@ export default function BranchList() {
 
     const [curr, setCurr] = useState<Branch>({name:"", address: {addL1:"", addL2:"", city:"", state:"", zip:0}, deleted:false})
 
-    const baseUrl = "http://localhost:8080"
-
-    useEffect(() => {
-        setLoad(true)
-        axios.get(baseUrl + '/branches').then(response => {
-        setSpring(response.data)
-        setLoad(false)
-        })
-    }, [])
+    BranchService.useGetBranches(setLoad, setSpring)
 
     if (loading) {
         return <p>Please wait warmly</p>
@@ -33,10 +24,11 @@ export default function BranchList() {
 
     return (
         <div>
+            {/* TODO: redux this */}
             {edit && <BranchEdit closeFun={() => setEdit(false)} branch={curr}/>}
             {del && <BranchDel closeFun={() => setDel(false)} branch={curr}/>}
-            <h2>All available branches</h2>
-            <Table className="w-100">
+            <h2 className="m-3">All available branches</h2>
+            <Table className="w-100" size="sm">
                 <thead>
                     <tr>
                         <th className="border border-dark">Name</th>
@@ -58,8 +50,8 @@ export default function BranchList() {
                             <td className="border border-dark">{val.address.state}</td>
                             <td className="border border-dark">{val.address.zip}</td>
                             <td className="border-0">
-                                <Button onClick={() => {setEdit(true); setCurr(val)}} className='btn btn-primary'>edit</Button>
-                                <Button onClick={() => {setDel(true); setCurr(val)}} className="btn btn-danger">del</Button>
+                                <Button onClick={() => {setEdit(true); setCurr(val)}} variant="primary">edit</Button>
+                                <Button onClick={() => {setDel(true); setCurr(val)}} variant="danger">del</Button>
                             </td>
                         </tr>
                     )}
