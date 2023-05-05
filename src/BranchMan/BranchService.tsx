@@ -17,8 +17,13 @@ const BranchService = {
     },
 
     putBranch: function(bran: Branch) {
-        console.log(bran)
         axios.put(this.baseUrl + '/branches/' + bran.key, bran).then(response => {
+            console.log(response)
+        })
+    },
+
+    delBranch: function(bran: Branch) {
+        axios.delete(this.baseUrl + '/branches/' + bran.key).then(response => {
             console.log(response)
         })
     }
