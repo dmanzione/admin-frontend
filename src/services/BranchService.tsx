@@ -1,7 +1,7 @@
 import {useEffect} from 'react'
 import axios from 'axios' 
 
-import Branch from './Branch'
+import Branch from '../types/Branch'
 
 const BranchService = {
     baseUrl: "http://localhost:8080",

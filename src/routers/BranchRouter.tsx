@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import './App.css';
+import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import { Container } from "react-bootstrap";
 
-import BranchRouter from './routers/BranchRouter';
+import BranchListPage from '../pages/Branches/BranchListPage';
 
-function App() {
+export default function BranchRouter() {
 
   const [loadingAuth, setLoadingAuth] = useState(false);
 
@@ -17,12 +16,9 @@ function App() {
     <>
       <Container>
         <Routes>
-          <Route path="/" element={<h1>Root Path!</h1>} />
-          <Route path="/branches/*" element={<BranchRouter />} />
+          <Route path="/" element={<BranchListPage />} />
         </Routes>
       </Container>
     </>
   );
 }
-
-export default App;
