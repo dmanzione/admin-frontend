@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Card } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import UserService from "../../services/UserService";
 import User from "../../types/User";
 import Loader from "../../components/Loader";
-import ListElement from "../../components/UserAccounts/ListElement";
-import { prettifyPhoneNumber } from "../../helpers/Prettify";
 import NotFound from "../NotFound";
+import UserInfoCard from "../../components/UserAccounts/UserInfoCard";
+import UserActions from "../../components/UserAccounts/UserActions";
 
 const CustomerPage = () => {
   const { id } = useParams();
@@ -33,19 +33,10 @@ const CustomerPage = () => {
       ) : user === null ? (
         <NotFound />
       ) : (
-        <Card>
-          <Card.Body>
-            <ListElement title="Full Name" content={user?.fullName()!} />
-            <hr />
-            <ListElement title="Email" content={user?.email!} />
-            <hr />
-            <ListElement title="Phone" content={prettifyPhoneNumber(user?.phone!)} />
-            <hr />
-            <ListElement title="Address" content={user?.address.toString()!} />
-            <hr />
-            <ListElement title="Role" content={user?.role.name!} />
-          </Card.Body>
-        </Card>
+        <Container>
+          <UserInfoCard user={user} />
+          <UserActions user={user} />
+        </Container>
       )}
     </>
   );

@@ -16,6 +16,7 @@ const UserList = ({ users }: UserListProps) => {
           <th>Name</th>
           <th>Type</th>
           <th>Id</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>
