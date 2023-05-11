@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Container } from "react-bootstrap";
 
 import BranchListPage from '../pages/Branches/BranchListPage';
+import BranchPage from '../pages/Branches/BranchPage';
 
 export default function BranchRouter() {
 
@@ -17,6 +18,7 @@ export default function BranchRouter() {
       <Container>
         <Routes>
           <Route path="/" element={<BranchListPage />} />
+          <Route path="/:id" element={<BranchPage />} />
         </Routes>
       </Container>
     </>

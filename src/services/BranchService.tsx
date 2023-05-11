@@ -1,4 +1,3 @@
-import {useEffect} from 'react'
 import axios from 'axios' 
 
 import Branch from '../types/Branch'
@@ -6,24 +5,46 @@ import Branch from '../types/Branch'
 const BranchService = {
     baseUrl: "http://localhost:8080",
 
-    useGetBranches: function(load: Function, brans: Function) {
-        useEffect(() => {
-            load(true)
-            axios.get(this.baseUrl + '/branches').then(response => {
-                brans(response.data)
-                load(false)
-            })
-        }, [])
+    async getBranches(closer: Function): Promise<Branch[]> {
+        return axios.get(this.baseUrl + '/branches').then(response => {
+            closer(false)
+            return response.data
+        }).catch(() => {
+            return []
+        })
+    },
+    
+    async getBranch(uid: string): Promise<Branch> {
+        return axios.get(this.baseUrl + '/branches/' + uid).then(response => {
+            return response.data
+        }).catch(() => {
+            return null
+        })
     },
 
-    putBranch: function(bran: Branch) {
-        axios.put(this.baseUrl + '/branches/' + bran.key, bran).then(response => {
+    async sortBranches(sort: string, asc: boolean): Promise<Branch[]> {
+        const sortUrl = this.baseUrl + '/branches?sort=' + sort + (asc ? '' : "&order=2")
+        return axios.get(sortUrl).then(response => {
+            return response.data
+        }).catch(() => {
+            return []
+        })
+    },
+
+    postBranch(bran: Branch) {
+        axios.post(this.baseUrl + '/branches', bran).then(response => {
             console.log(response)
         })
     },
 
-    delBranch: function(bran: Branch) {
-        axios.delete(this.baseUrl + '/branches/' + bran.key).then(response => {
+    putBranch(bran: Branch) {
+        axios.put(this.baseUrl + '/branches/' + bran.uid, bran).then(response => {
+            console.log(response)
+        })
+    },
+
+    async delBranch(bran: Branch) {
+        axios.delete(this.baseUrl + '/branches/' + bran.uid).then(response => {
             console.log(response)
         })
     }
