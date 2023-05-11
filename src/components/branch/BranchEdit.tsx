@@ -55,16 +55,16 @@ export default function BranchEdit(props: {branch: Branch, closer: Function, bra
 
     const onSubmit = (bran: FlatBranch) => {
         const newBran: Branch = {name: bran.name, address: {addL1: bran.addL1, addL2: bran.addL2, city: bran.city, state: bran.state, zip: bran.zip}, uid: curr.uid}
-        BranchService.putBranch(newBran)
+        const prom = BranchService.putBranch(newBran)
         closer(false)
         props.branchUpdate(newBran)
+        return prom
         
     }
 
     return (
         <ModalBody>
             <FormComponent formData={{
-                title: "Edit Branch",
                 fields,
                 validation,
                 onSubmit

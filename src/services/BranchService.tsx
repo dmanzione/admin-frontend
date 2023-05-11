@@ -36,21 +36,24 @@ const BranchService = {
         })
     },
 
-    postBranch(bran: Branch) {
-        axios.post(this.baseUrl + '/branches', bran).then(response => {
+    async postBranch(bran: Branch): Promise<Branch> {
+        return axios.post(this.baseUrl + '/branches', bran).then(response => {
             console.log(response)
+            return response.data
         })
     },
 
-    putBranch(bran: Branch) {
-        axios.put(this.baseUrl + '/branches/' + bran.uid, bran).then(response => {
+    async putBranch(bran: Branch) {
+        return axios.put(this.baseUrl + '/branches/' + bran.uid, bran).then(response => {
             console.log(response)
+            return response.data
         })
     },
 
     async delBranch(bran: Branch) {
-        axios.delete(this.baseUrl + '/branches/' + bran.uid).then(response => {
+        return axios.delete(this.baseUrl + '/branches/' + bran.uid).then(response => {
             console.log(response)
+            return response.data
         })
     }
 }
