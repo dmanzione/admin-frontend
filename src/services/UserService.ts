@@ -18,14 +18,24 @@ export default class UserService extends ApiService {
     return this.instance as UserService;
   }
 
+  static getUserUrl(user: User) {
+    return `/users/${user.role.name.toLowerCase()}s/${user.id}`;
+  }
+
   private mapAddress(addr: {
-    street1: string,
-    street2: string | null,
-    city: string,
-    state: string,
-    zipCode: number,
+    street1: string;
+    street2: string | null;
+    city: string;
+    state: string;
+    zipCode: number;
   }): Address {
-    return new Address(addr.street1, addr.street2, addr.city, addr.state, addr.zipCode);
+    return new Address(
+      addr.street1,
+      addr.street2,
+      addr.city,
+      addr.state,
+      addr.zipCode
+    );
   }
 
   private mapCustomer(user: User): Customer {
@@ -71,14 +81,18 @@ export default class UserService extends ApiService {
   }
 
   async getEmployees(): Promise<Employee[]> {
-    return this.mapCustomers((await this.request("employees")) as User[]);
+    return this.mapEmployees((await this.request("employees")) as User[]);
   }
 
   async getEmployee(id: string): Promise<Employee> {
-    return this.mapCustomer((await this.request(`employees/${id}`)) as User);
+    return this.mapEmployee((await this.request(`employees/${id}`)) as User);
   }
 
   async createCustomer() {
     await this.request("customers", {}, RequestType.POST);
+  }
+
+  async deleteUser(id: string, role: string): Promise<any> {
+    return this.request(`${role.toLowerCase()}s/${id}`, {}, RequestType.DELETE);
   }
 }

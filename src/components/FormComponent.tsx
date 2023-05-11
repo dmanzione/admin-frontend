@@ -20,7 +20,7 @@ export interface Field {
   type: "text" | "password" | "email" | "date" | "tel" | "url" | "search" | "number";
 }
 
-export default function FormComponent({ formData }: FormComponentProps) {
+const FormComponent = ({ formData }: FormComponentProps) => {
   const { fields, validation, onSubmit } = formData;
 
   const initValues: any = {};
@@ -85,4 +85,6 @@ export default function FormComponent({ formData }: FormComponentProps) {
       )}
     </Formik>
   );
-}
+};
+
+export default FormComponent;

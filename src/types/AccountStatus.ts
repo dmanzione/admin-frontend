@@ -1,7 +1,7 @@
 enum AccountStatus {
-  OPEN,
-  FROZEN,
-  CLOSED
+  OPEN = "OPEN",
+  FROZEN = "FROZEN",
+  CLOSED = "CLOSED",
 }
 
-export default AccountStatus
+export default AccountStatus;
