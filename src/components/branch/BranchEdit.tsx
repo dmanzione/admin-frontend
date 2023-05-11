@@ -24,7 +24,7 @@ export default function BranchEdit(props: {branch: Branch, closer: Function, bra
             type: "text"
         },{
             name: "addL2",
-            initValue: curr.address.addL2,
+            initValue: curr.address.addL2 ? curr.address.addL2 : "",
             displayName: "Address 2",
             type: "text"
         },{
@@ -41,7 +41,7 @@ export default function BranchEdit(props: {branch: Branch, closer: Function, bra
             name: "zip",
             initValue: curr.address.zip,
             displayName: "Zip Code",
-            type: "number"
+            type: "text"
         }]
     ;
 

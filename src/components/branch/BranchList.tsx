@@ -35,7 +35,7 @@ export default function BranchList(props: {branches: Branch[], sorter: Function}
                         <th onClick={() => {handleSort("city");}}>City {currSort == "city" && <b>({asc? "Ascending" : "Descending"})</b>}</th>
                         <th onClick={() => {handleSort("state");}}>State {currSort == "state" && <b>({asc? "Ascending" : "Descending"})</b>}</th>
                         <th onClick={() => {handleSort("zip");}}>Zip {currSort == "zip" && <b>({asc? "Ascending" : "Descending"})</b>}</th>
-                        <th />
+                        <th onClick={() => {handleSort(" ");}}>clear filter</th>
                     </tr>
                 </thead>
                 <tbody>

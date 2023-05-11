@@ -40,7 +40,7 @@ export default function BranchAdd(props: {closer: Function}) {
             name: "zip",
             initValue: "",
             displayName: "Zip Code",
-            type: "number"
+            type: "text"
         }]
     ;
 

@@ -45,8 +45,8 @@ export default function BranchPage() {
             <h3>This is {curr!.name}'s page!</h3> 
             <br />
             <p>Address:</p>
-            {curr!.address.addL2 && <p>{curr!.address.addL1}, {curr!.address.addL2}</p>}
-            {!curr!.address.addL2 && <p>{curr!.address.addL1}</p>}
+            {curr!.address.addL2 ? <p>{curr!.address.addL1}, {curr!.address.addL2}</p> :
+                <p>{curr!.address.addL1}</p>}
             <p>{curr!.address.city}, {curr!.address.state}, {curr!.address.zip}</p>
             <Button onClick={goToBranches} variant="secondary">Back</Button>
             <Button onClick={() => setEdit(true)} variant="primary">Edit</Button>

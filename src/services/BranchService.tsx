@@ -23,7 +23,12 @@ const BranchService = {
     },
 
     async sortBranches(sort: string, asc: boolean): Promise<Branch[]> {
-        const sortUrl = this.baseUrl + '/branches?sort=' + sort + (asc ? '' : "&order=2")
+        var sortUrl
+        if(sort == " ") {
+            sortUrl = this.baseUrl + '/branches'
+        } else {
+            sortUrl = this.baseUrl + '/branches?sort=' + sort + (asc ? '' : "&order=2")
+        }
         return axios.get(sortUrl).then(response => {
             return response.data
         }).catch(() => {
