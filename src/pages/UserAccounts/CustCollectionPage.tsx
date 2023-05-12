@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import UserList from "../../components/UserAccounts/UserList";
+import UserList from "../../components/UserAccounts/ListPage/UserList";
 import UserService from "../../services/UserService";
 import User from "../../types/User";
 import Loader from "../../components/Loader";

@@ -1,4 +1,3 @@
-import { StringMappingType } from "typescript";
 import Address from "../types/Address";
 import Customer from "../types/Customer";
 import Employee from "../types/Employee";
@@ -20,6 +19,18 @@ export interface UpdateDto {
   email: string;
   phone: string;
   address: AddressDto;
+}
+
+export interface NewDto {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  street1: string;
+  street2: string | null;
+  city: string;
+  state: string;
+  zipCode: string;
 }
 
 export default class UserService extends ApiService {
@@ -59,6 +70,7 @@ export default class UserService extends ApiService {
   private mapCustomer(user: Customer): Customer {
     return new Customer(
       user.id!,
+      new Date(user.dateCreated!),
       user.firstName!,
       user.lastName!,
       user.email!,
@@ -76,6 +88,7 @@ export default class UserService extends ApiService {
   private mapEmployee(user: Employee): Employee {
     return new Customer(
       user.id!,
+      new Date(user.dateCreated!),
       user.firstName!,
       user.lastName!,
       user.email!,
@@ -106,12 +119,49 @@ export default class UserService extends ApiService {
     return this.mapEmployee((await this.request(`employees/${id}`)) as Employee);
   }
 
-  async createCustomer() {
-    await this.request("customers", {}, RequestType.POST);
+  async createCustomer(newUser: NewDto) {
+    const data = {
+      password: "defaultPassword",
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email,
+      phone: newUser.phone,
+      address: {
+        street1: newUser.street1,
+        street2: newUser.street2,
+        city: newUser.city,
+        state: newUser.state,
+        zipCode: newUser.zipCode,
+      },
+    };
+
+    return this.mapCustomer(
+      (await this.request("customers", data, RequestType.POST)) as User
+    );
+  }
+  async createEmployee(newUser: NewDto) {
+    const data = {
+      password: "defaultPassword",
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email,
+      phone: newUser.phone,
+      address: {
+        street1: newUser.street1,
+        street2: newUser.street2,
+        city: newUser.city,
+        state: newUser.state,
+        zipCode: newUser.zipCode,
+      },
+    };
+
+    return this.mapEmployee(
+      (await this.request("employees", data, RequestType.POST)) as User
+    );
   }
 
   async updateCustomer(user: Customer): Promise<Customer> {
-    const data: UpdateDto = {
+    const data = {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,

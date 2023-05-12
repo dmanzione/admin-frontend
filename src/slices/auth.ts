@@ -47,6 +47,7 @@ export const userLogin = createAsyncThunk(
       // THIS IS A TEMPORARY USER. REMOVE THIS
       const TEMP_USER = new User(
         "000",
+        new Date(),
         "TEST",
         "USER",
         "NOEMAIL",

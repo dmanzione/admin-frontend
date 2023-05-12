@@ -6,6 +6,7 @@ import User from "./User";
 class Customer extends User {
   constructor(
     id: string,
+    dateCreated: Date,
     firstName: string,
     lastName: string,
     email: string,
@@ -14,7 +15,7 @@ class Customer extends User {
     status: AccountStatus,
     role: Role
   ) {
-    super(id, firstName, lastName, email, phone, address, status, role);
+    super(id, dateCreated, firstName, lastName, email, phone, address, status, role);
   }
 }
 

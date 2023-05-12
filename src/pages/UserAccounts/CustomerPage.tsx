@@ -5,8 +5,8 @@ import UserService from "../../services/UserService";
 import User from "../../types/User";
 import Loader from "../../components/Loader";
 import NotFound from "../NotFound";
-import UserInfoCard from "../../components/UserAccounts/UserInfoCard";
-import UserActions from "../../components/UserAccounts/UserActions";
+import UserInfoCard from "../../components/UserAccounts/ViewPage/UserInfoCard";
+import UserActions from "../../components/UserAccounts/ViewPage/UserActions";
 
 const CustomerPage = () => {
   const { id } = useParams();
