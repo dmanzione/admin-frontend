@@ -1,8 +1,26 @@
+import { StringMappingType } from "typescript";
 import Address from "../types/Address";
 import Customer from "../types/Customer";
 import Employee from "../types/Employee";
+import { UsState } from "../types/UsState";
 import User from "../types/User";
 import ApiService, { RequestType } from "./ApiService";
+
+interface AddressDto {
+  street1: string;
+  street2: string | null;
+  city: string;
+  state: string;
+  zipCode: string;
+}
+
+export interface UpdateDto {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: AddressDto;
+}
 
 export default class UserService extends ApiService {
   private static instance: ApiService | null = null;
@@ -27,18 +45,18 @@ export default class UserService extends ApiService {
     street2: string | null;
     city: string;
     state: string;
-    zipCode: number;
+    zipCode: string;
   }): Address {
     return new Address(
       addr.street1,
       addr.street2,
       addr.city,
-      addr.state,
+      addr.state as UsState,
       addr.zipCode
     );
   }
 
-  private mapCustomer(user: User): Customer {
+  private mapCustomer(user: Customer): Customer {
     return new Customer(
       user.id!,
       user.firstName!,
@@ -51,11 +69,11 @@ export default class UserService extends ApiService {
     );
   }
 
-  private mapCustomers(users: User[]): Customer[] {
+  private mapCustomers(users: Customer[]): Customer[] {
     return users.map(this.mapCustomer.bind(this));
   }
 
-  private mapEmployee(user: User): Employee {
+  private mapEmployee(user: Employee): Employee {
     return new Customer(
       user.id!,
       user.firstName!,
@@ -68,31 +86,75 @@ export default class UserService extends ApiService {
     );
   }
 
-  private mapEmployees(users: User[]): Employee[] {
+  private mapEmployees(users: Employee[]): Employee[] {
     return users.map(this.mapCustomer.bind(this));
   }
 
   async getCustomers(): Promise<Customer[]> {
-    return this.mapCustomers((await this.request("customers")) as User[]);
+    return this.mapCustomers((await this.request("customers")) as Customer[]);
   }
 
   async getCustomer(id: string): Promise<Customer> {
-    return this.mapCustomer((await this.request(`customers/${id}`)) as User);
+    return this.mapCustomer((await this.request(`customers/${id}`)) as Customer);
   }
 
   async getEmployees(): Promise<Employee[]> {
-    return this.mapEmployees((await this.request("employees")) as User[]);
+    return this.mapEmployees((await this.request("employees")) as Employee[]);
   }
 
   async getEmployee(id: string): Promise<Employee> {
-    return this.mapEmployee((await this.request(`employees/${id}`)) as User);
+    return this.mapEmployee((await this.request(`employees/${id}`)) as Employee);
   }
 
   async createCustomer() {
     await this.request("customers", {}, RequestType.POST);
   }
 
-  async deleteUser(id: string, role: string): Promise<any> {
-    return this.request(`${role.toLowerCase()}s/${id}`, {}, RequestType.DELETE);
+  async updateCustomer(user: Customer): Promise<Customer> {
+    const data: UpdateDto = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      address: {
+        street1: user.address.street1,
+        street2: user.address.street2,
+        city: user.address.city,
+        state: user.address.state,
+        zipCode: user.address.zipCode,
+      },
+    };
+
+    return this.mapCustomer(
+      (await this.request(`customers/${user.id}`, data, RequestType.PUT)) as User
+    );
+  }
+
+  async updateEmployee(user: Employee): Promise<Employee> {
+    const data: UpdateDto = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      address: {
+        street1: user.address.street1,
+        street2: user.address.street2,
+        city: user.address.city,
+        state: user.address.state,
+        zipCode: user.address.zipCode,
+      },
+    };
+
+    return this.mapCustomer(
+      (await this.request(`employees/${user.id}`, data, RequestType.PUT)) as User
+    );
+  }
+
+  async deleteUser(user: User): Promise<string> {
+    return this.request(
+      `${user.role.name.toLowerCase()}s/${user.id}`,
+      {},
+      RequestType.DELETE
+    );
   }
 }
