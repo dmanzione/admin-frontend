@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import User from "../../types/User";
-import UserService from "../../services/UserService";
+import User from "../../../types/User";
+import UserService from "../../../services/UserService";
 
 type UserElementProps = {
   user: User;
@@ -16,9 +16,9 @@ const UserElement = ({ user }: UserElementProps) => {
   return (
     <tr onClick={navToUser}>
       <td>{user.fullName()}</td>
-      <td>{user.role.name}</td>
-      <td>{user.id}</td>
+      <td>{user.dateCreated.toLocaleString()}</td>
       <td>{user.status}</td>
+      <td>{user.id}</td>
     </tr>
   );
 };

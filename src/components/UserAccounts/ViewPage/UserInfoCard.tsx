@@ -1,8 +1,8 @@
 import { Card } from "react-bootstrap";
-import User from "../../types/User";
-import { prettifyPhoneNumber } from "../../helpers/Prettify";
-import ListElement from "./ListElement";
-import AccountStatus from "../../types/AccountStatus";
+import User from "../../../types/User";
+import { prettifyPhoneNumber } from "../../../helpers/Prettify";
+import ListElement from "../ListElement";
+import AccountStatus from "../../../types/AccountStatus";
 
 interface UserInfoCardProps {
   user: User;
@@ -23,7 +23,12 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
   return (
     <Card>
       <Card.Header className={"text-light " + headerStyle}>
-        <Card.Title>Account status: {user.status}</Card.Title>
+        <Card.Title>
+          <span>Account status: {user.status}</span>
+          <span className="float-end">
+            Account opened: {user.dateCreated.toLocaleString()}
+          </span>
+        </Card.Title>
       </Card.Header>
       <Card.Body>
         <ListElement title="Full Name" content={user?.fullName()!} />
