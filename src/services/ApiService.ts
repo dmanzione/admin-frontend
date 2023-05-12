@@ -17,12 +17,10 @@ abstract class ApiService {
   }
 
   async request(endpoint: string, data = {}, method = "get") {
-    console.debug("API Call:", endpoint, " Payload: ", data, "Method:", method);
-
+    console.debug("API Call:", method.toUpperCase(), endpoint, " Payload: ", data);
     const url = `${this.BASE_URL}/${endpoint}`;
     const headers = { Authorization: `Bearer ${ApiService.token}` };
     const params = method === "get" ? data : {};
-    console.log("REQUEST: " + method.toUpperCase() + " " + url);
     try {
       const resp = await axios({ url, method, data, params, headers });
       return resp.data;

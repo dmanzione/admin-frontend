@@ -131,9 +131,7 @@ const UserActions = ({ user, setUser }: UserActionsProps) => {
           setShow(false);
         })
         .catch((errors: any) => {
-          console.log("ERRORS " + errors);
           errors.forEach((error: any) => {
-            console.log(error);
             if (error.includes("email already exists")) {
               setFieldError("email", "Email already registered");
             }
