@@ -1,16 +1,18 @@
+import { UsState } from "./UsState";
+
 class Address {
   street1: string;
   street2: string | null;
   city: string;
-  state: string;
-  zipCode: number;
+  state: UsState;
+  zipCode: string;
 
   constructor(
     street1: string,
     street2: string | null,
     city: string,
-    state: string,
-    zip: number
+    state: UsState,
+    zip: string
   ) {
     this.street1 = street1;
     this.street2 = street2;
@@ -20,8 +22,9 @@ class Address {
   }
 
   toString(): string {
-    return `${this.street1}${this.street2 ? " " + this.street2 + "," : ","} ${this.city
-      }, ${this.state}, ${this.zipCode}`;
+    return `${this.street1}${this.street2 ? " " + this.street2 + "," : ","} ${
+      this.city
+    }, ${this.state} ${this.zipCode}`;
   }
 }
 
