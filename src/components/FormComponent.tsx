@@ -1,7 +1,8 @@
 import { Card, Form, Button } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { MouseEventHandler } from "react";
+import { ChangeEventHandler, MouseEventHandler } from "react";
+import { UsState } from "../types/UsState";
 
 export interface FormComponentProps {
   formData: FormData;
@@ -17,7 +18,17 @@ export interface Field {
   name: string;
   displayName: string;
   initValue: any;
-  type: "text" | "password" | "email" | "date" | "tel" | "url" | "search" | "number";
+  type:
+    | "text"
+    | "password"
+    | "email"
+    | "date"
+    | "tel"
+    | "url"
+    | "search"
+    | "number"
+    | "state"
+    | "hidden";
 }
 
 const FormComponent = ({ formData }: FormComponentProps) => {
@@ -25,7 +36,7 @@ const FormComponent = ({ formData }: FormComponentProps) => {
 
   const initValues: any = {};
   fields.forEach((field) => {
-    initValues[field.name] = field.initValue;
+    initValues[field.name] = field.initValue || "";
   });
 
   const handleSubmit = (
@@ -49,27 +60,34 @@ const FormComponent = ({ formData }: FormComponentProps) => {
       {({ values, errors, touched, handleChange, handleSubmit, isSubmitting }) => (
         <Form>
           {fields.map((field) => {
-            return (
-              <Form.Group
-                className="mb-3"
-                controlId={`form${field.name}`}
-                key={field.name}
-              >
-                <Form.Label>{field.displayName}</Form.Label>
-                <Form.Control
-                  className={
-                    errors[field.name] && touched[field.name] ? "is-invalid" : ""
-                  }
-                  type={field.type}
-                  name={field.name}
-                  placeholder={field.displayName}
+            if (field.type === "state")
+              return (
+                <StateField
+                  key={field.name}
+                  field={field}
+                  value={values[field.name]}
                   onChange={handleChange}
-                  value={values[field.name as string]}
                 />
-                <div className="invalid-feedback">
-                  {errors[field.name] as string}
-                </div>
-              </Form.Group>
+              );
+
+            if (field.type === "hidden")
+              return (
+                <HiddenField
+                  key={field.name}
+                  field={field}
+                  value={values[field.name]}
+                />
+              );
+
+            return (
+              <NormalField
+                key={field.name}
+                field={field}
+                value={values[field.name as string]}
+                error={!!(errors[field.name] && touched[field.name])}
+                errMsg={errors[field.name] as string}
+                onChange={handleChange}
+              />
             );
           })}
           <Button
@@ -88,3 +106,51 @@ const FormComponent = ({ formData }: FormComponentProps) => {
 };
 
 export default FormComponent;
+
+interface FieldProps {
+  field: Field;
+  value: any;
+  error?: boolean;
+  errMsg?: string;
+  onChange?: ChangeEventHandler;
+}
+
+const NormalField = ({ field, value, error, errMsg, onChange }: FieldProps) => {
+  return (
+    <Form.Group className="mb-3" controlId={`form${field.name}`}>
+      <Form.Label>{field.displayName}</Form.Label>
+      <Form.Control
+        className={error ? "is-invalid" : ""}
+        type={field.type}
+        name={field.name}
+        placeholder={field.displayName}
+        onChange={onChange}
+        value={value}
+      />
+      <div className="invalid-feedback">{errMsg}</div>
+    </Form.Group>
+  );
+};
+
+const HiddenField = ({ field, value }: FieldProps) => {
+  return (
+    <Form.Group controlId={`form${field.name}`}>
+      <Form.Control type={field.type} name={field.name} value={value} />
+    </Form.Group>
+  );
+};
+
+const StateField = ({ field, value, onChange }: FieldProps) => {
+  return (
+    <Form.Group className="mb-3" controlId={`form${field.name}`}>
+      <Form.Label>{field.displayName}</Form.Label>
+      <Form.Select value={value} onChange={onChange} name={field.name}>
+        {(Object.keys(UsState) as Array<keyof typeof UsState>).map((state) => (
+          <option value={state} key={state}>
+            {state}
+          </option>
+        ))}
+      </Form.Select>
+    </Form.Group>
+  );
+};

@@ -35,7 +35,7 @@ const EmployeePage = () => {
       ) : (
         <Container>
           <UserInfoCard user={user} />
-          <UserActions user={user} />
+          <UserActions user={user} setUser={setUser} />
         </Container>
       )}
     </>

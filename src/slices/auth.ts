@@ -6,6 +6,7 @@ import parseJwt from "../helpers/parseJwt";
 import User from "../types/User";
 import Address from "../types/Address";
 import AccountStatus from "../types/AccountStatus";
+import { UsState } from "../types/UsState";
 
 interface LoginPayload {
   token?: string;
@@ -50,7 +51,7 @@ export const userLogin = createAsyncThunk(
         "USER",
         "NOEMAIL",
         "NOPHONE",
-        new Address("TEST", null, "CITY", "NOSTATE", 20002),
+        new Address("TEST", null, "CITY", UsState.NY, "20002"),
         AccountStatus.OPEN,
         { name: "EMPLOYEE", description: "TEST EMPLOYEE" }
       );

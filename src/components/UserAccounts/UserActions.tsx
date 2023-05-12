@@ -1,16 +1,21 @@
 import { Button, Modal } from "react-bootstrap";
 import User from "../../types/User";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import useDeletionConfirmation from "../../hooks/useDeletionConfirmation";
-import UserService from "../../services/UserService";
+import UserService, { UpdateDto } from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
 import AccountStatus from "../../types/AccountStatus";
+import FormComponent from "../FormComponent";
+import { FormData } from "../FormComponent";
+import * as Yup from "yup";
+import { phoneRegEx, zipCodeRegEx } from "../../helpers/regex";
 
 interface UserActionsProps {
   user: User;
+  setUser: Dispatch<SetStateAction<User | null>>;
 }
 
-const UserActions = ({ user }: UserActionsProps) => {
+const UserActions = ({ user, setUser }: UserActionsProps) => {
   const [show, setShow] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -23,7 +28,7 @@ const UserActions = ({ user }: UserActionsProps) => {
     );
 
   setDeleteCallback(() => {
-    return api.deleteUser(user.id, user.role.name).then(() => {
+    return api.deleteUser(user).then(() => {
       navigate(`/users/${user.role.name.toLowerCase()}s`);
     });
   });
@@ -36,21 +41,118 @@ const UserActions = ({ user }: UserActionsProps) => {
     setShow(false);
   };
 
-  const editModalContent: JSX.Element = (
-    <>
+  const editFormData: FormData = {
+    fields: [
+      {
+        name: "firstName",
+        displayName: "First Name",
+        initValue: user.firstName,
+        type: "text",
+      },
+      {
+        name: "lastName",
+        displayName: "Last Name",
+        initValue: user.lastName,
+        type: "text",
+      },
+      {
+        name: "email",
+        displayName: "Email",
+        initValue: user.email,
+        type: "email",
+      },
+      {
+        name: "phone",
+        displayName: "Phone",
+        initValue: user.phone,
+        type: "tel",
+      },
+      {
+        name: "street1",
+        displayName: "Street",
+        initValue: user.address.street1,
+        type: "text",
+      },
+      {
+        name: "street2",
+        displayName: "Apt, Suite, Etc.",
+        initValue: user.address.street2,
+        type: "tel",
+      },
+      {
+        name: "city",
+        displayName: "City",
+        initValue: user.address.city,
+        type: "text",
+      },
+      {
+        name: "state",
+        displayName: "State",
+        initValue: user.address.state,
+        type: "state",
+      },
+      {
+        name: "zipCode",
+        displayName: "Zip Code",
+        initValue: user.address.zipCode,
+        type: "text",
+      },
+      {
+        name: "id",
+        displayName: "id",
+        initValue: user.id,
+        type: "hidden",
+      },
+    ],
+    validation: Yup.object().shape({
+      firstName: Yup.string().required("Required"),
+      lastName: Yup.string().required("Required"),
+      email: Yup.string().email().required("Required"),
+      phone: Yup.string()
+        .matches(phoneRegEx, "Invalid phone number")
+        .required("Required"),
+      street1: Yup.string().required("Required"),
+      street2: Yup.string(),
+      city: Yup.string().required("Required"),
+      state: Yup.string().required("Required"),
+      zipCode: Yup.string().matches(zipCodeRegEx, "Invalid").required("Required"),
+    }),
+    onSubmit: (vals: UpdateDto, setFieldError: Function): Promise<any> => {
+      const uU = user.copy({ ...vals });
+      let promise: Promise<User | void>;
+
+      promise = (
+        user.role.name === "customer"
+          ? api.updateCustomer(uU)
+          : api.updateEmployee(uU)
+      )
+        .then((user) => {
+          setUser(user);
+          setShow(false);
+        })
+        .catch((errors: any) => {
+          console.log("ERRORS " + errors);
+          errors.forEach((error: any) => {
+            console.log(error);
+            if (error.includes("email already exists")) {
+              setFieldError("email", "Email already registered");
+            }
+          });
+        });
+
+      return promise;
+    },
+  };
+
+  const editModal: JSX.Element = (
+    <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Modal heading</Modal.Title>
+        <Modal.Title>Editing User</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={handleClose}>
-          Save Changes
-        </Button>
-      </Modal.Footer>
-    </>
+      <Modal.Body>
+        <FormComponent formData={editFormData} />
+      </Modal.Body>
+    </Modal>
   );
 
   return (
@@ -69,6 +171,7 @@ const UserActions = ({ user }: UserActionsProps) => {
           Close Account
         </Button>
       </div>
+      {editModal}
       {deleteModal}
     </>
   );
