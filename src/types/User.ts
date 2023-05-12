@@ -17,6 +17,7 @@ interface CopyPayload {
 
 class User {
   id: string;
+  dateCreated: Date;
   firstName: string;
   lastName: string;
   email: string;
@@ -27,6 +28,7 @@ class User {
 
   constructor(
     id: string,
+    dateCreated: Date,
     firstName: string,
     lastName: string,
     email: string,
@@ -36,6 +38,7 @@ class User {
     role: Role
   ) {
     this.id = id;
+    this.dateCreated = dateCreated;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
@@ -63,6 +66,7 @@ class User {
     const ad = this.address;
     return new User(
       this.id,
+      this.dateCreated,
       firstName || this.firstName,
       lastName || this.lastName,
       email || this.email,
