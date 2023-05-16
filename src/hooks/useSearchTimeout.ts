@@ -7,7 +7,11 @@ import { useEffect, useRef } from "react";
  * @param {*} delay timeout length
  */
 
-export default function useSearchTimeout(trigger: any, callback: () => any, delay: number) {
+export default function useSearchTimeout(
+  trigger: any,
+  callback: () => void,
+  delay: number
+) {
   const isInitialMount = useRef(true);
 
   useEffect(() => {
@@ -25,7 +29,7 @@ export default function useSearchTimeout(trigger: any, callback: () => any, dela
       }, delay);
     });
 
-    // fills companies when promise resolves
+    // runs callback when timeout expires
     searchTimeout.then(callback);
 
     // clears timeout if search value changes within the timeout lifespan
