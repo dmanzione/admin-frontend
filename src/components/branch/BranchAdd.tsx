@@ -9,64 +9,65 @@ import BranchService from "../../services/BranchService";
 
 export default function BranchAdd(props: {closer: Function}) {
     const closer = props.closer
+    const branchService = BranchService.getInstance();
 
     const fields: Field[] = 
         [{
-            name: "name",
-            initValue: "",
-            displayName: "Branch Name",
+      name: "name",
+      initValue: "",
+      displayName: "Branch Name",
             type: "text"
         },{
-            name: "addL1",
-            initValue: "",
-            displayName: "Address 1",
+      name: "addL1",
+      initValue: "",
+      displayName: "Address 1",
             type: "text"
         },{
-            name: "addL2",
-            initValue: "",
-            displayName: "Address 2",
+      name: "addL2",
+      initValue: "",
+      displayName: "Address 2",
             type: "text"
         },{
-            name: "city",
-            initValue: "",
-            displayName: "City",
+      name: "city",
+      initValue: "",
+      displayName: "City",
             type: "text"
         },{
-            name: "state",
-            initValue: "",
-            displayName: "State",
+      name: "state",
+      initValue: "",
+      displayName: "State",
             type: "text"
         },{
-            name: "zip",
-            initValue: "",
-            displayName: "Zip Code",
+      name: "zip",
+      initValue: "",
+      displayName: "Zip Code",
             type: "text"
         }]
     ;
 
-    const validation = Yup.object().shape({
-        name: Yup.string().required("Required"),
-        addL1: Yup.string().required("Required"),
-        city: Yup.string().required("Required"),
-        state: Yup.string().required("Required"),
-        zip: Yup.string().required("Required"),
-    });
+  const validation = Yup.object().shape({
+    name: Yup.string().required("Required"),
+    addL1: Yup.string().required("Required"),
+    city: Yup.string().required("Required"),
+    state: Yup.string().required("Required"),
+    zip: Yup.string().required("Required"),
+  });
 
-    const onSubmit = (bran: FlatBranch) => {
+  const onSubmit = (bran: FlatBranch) => {
         const newBran: Branch = {name: bran.name, address: {addL1: bran.addL1, addL2: bran.addL2, city: bran.city, state: bran.state, zip: bran.zip}}
-        const prom = BranchService.postBranch(newBran)
+        const prom = branchService.postBranch(newBran)
         closer(false)
         return prom
     }
 
-    return (
-        <ModalBody>
+  return (
+    <ModalBody>
             <FormComponent formData={{
-                fields,
-                validation,
+          fields,
+          validation,
                 onSubmit
-            }}
-            />
-        </ModalBody>
+        }}
+      />
+    </ModalBody>
     )
 }
