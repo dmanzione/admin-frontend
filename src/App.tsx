@@ -7,6 +7,8 @@ import UserRouter from "./routers/UserRouter";
 import BranchRouter from './routers/BranchRouter';
 import { userLogin } from "./slices/auth";
 import { useAppDispatch, useAppSelector } from "./hooks/useApp";
+import LoanRouter from "./routers/LoanRouter";
+import AccountRouter from "./routers/AccountRouter";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -25,8 +27,11 @@ function App() {
   ) : (
     <Container>
       <Routes>
+        <Route path="/loans/*" element ={<LoanRouter/>}/>
+        <Route path="/accounts/*" element={<AccountRouter />} />
         <Route path="/users/*" element={<UserRouter />} />
         <Route path="/branches/*" element={<BranchRouter />} />
+
         <Route path="/" element={<h1>Root Path!</h1>} />
       </Routes>
     </Container>
