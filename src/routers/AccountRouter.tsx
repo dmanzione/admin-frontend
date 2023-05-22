@@ -2,9 +2,12 @@
 import { Container } from "react-bootstrap";
 import { Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
-import NewLoan from "../components/NewLoanComponent/NewLoan";
-import EditLoan from "../components/EditLoanComponent/EditLoan";
-import AccountsList from "../components/AccountsListComponent/AccountsList";
+import NewLoan from "../forms/Loans/LoanForm";
+import AccountsList from "../components/Accounts/AccountsList";
+import EditLoanForm from "../forms/Loans/EditLoanForm";
+import Loan from "../types/Loan";
+import LoanService from "../services/LoanService";
+import AccountsMain from "../pages/Accounts/AccountsMain";
 
 
 const AccountRouter: React.FC = () => {
@@ -12,10 +15,8 @@ const AccountRouter: React.FC = () => {
     <Container>
       <Routes>
           
-          <Route path="/" element={<AccountsList />} />
+          <Route path="/" element={<AccountsMain />} />
           <Route path="/new" element={<NewLoan />} />
-          <Route path="/:id/edit" element={<EditLoan />} />
-          
     </Routes>
     </Container>
   );

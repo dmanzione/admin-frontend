@@ -1,22 +1,23 @@
 import { Container } from "react-bootstrap";
 import { Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
-import { Router } from "react-router-dom";
-import LoanListComponent from "../components/LoanListComponent/LoanList";
-import LoanListPage from "../pages/LoanListPage";
-import FormComponent from "../components/FormComponent";
-import LoanList from "../components/LoanListComponent/LoanList";
-import EditLoan from "../components/EditLoanComponent/EditLoan";
-import NewLoan from "../components/NewLoanComponent/NewLoan";
+
+import EditLoanForm from "../forms/Loans/EditLoanForm";
+import LoanForm from "../forms/Loans/LoanForm";
+import LoanService, { getLoanByPk } from "../services/LoanService";
+import LoanCard from "../components/Loans/LoanCard";
+import LoanDashboard from "../components/Loans/LoanDashboard";
+import LoanMain from "../pages/Loans/LoanMain";
 
 const LoanRouter: React.FC = () => {
   return (
     <Container>
       <Routes>
           
-          <Route path="/" element={<LoanListPage />} />
-          <Route path="/new" element={<NewLoan />} />
-          <Route path="/:id/edit" element={<EditLoan />} />
+          <Route path="/" element={<LoanMain/>} />
+          <Route path="/new" element={<LoanForm />} />
+          <Route path="/:id/edit" element={<EditLoanForm/>}/>;
+          <Route path="/:id/" element={<LoanCard/>}/>
 
     </Routes>
     </Container>

@@ -1,67 +1,105 @@
-import axios from "axios";
-import Loan from "../types/Loan";
+
+
+import axios from 'axios';
+import Loan from '../types/Loan';
+
+
+// Define the base URL for the API
+const baseURL = 'http://localhost:8080/accounts-api/loan-accounts';
+
+// Create an Axios instance with the base URL
+const api = axios.create({
+  baseURL,
+});
+
+// Define the type for the HATEOAS response
 
 export default class LoanService {
-    static getInstance(): LoanService {
-      return new LoanService();
-    }
-
-    constructor(){
-        process.env.BASE_URL = "http://localhost:8080/accounts-api/loan-accounts/";
+    private constructor(){
 
     }
-
-
-    getLoanById(id:number){
-        return axios.get(process.env.BASE_URL +""+ id).then(res => res.data._embedded.loanAccounts).catch((err)=>{
-            console.error(err);
-     
-        });
-
+    public static getInstance(){
+        return new LoanService();
     }
-
-    getLoans(){
-        return axios.get(""+process.env.BASE_URL).then(res => res.data._embedded.loanAccounts);
-
+    getAll(): Promise<Loan[]> {
+        return getAllLoans();
     }
-
-    
-    createLoan(loan:Loan){
-        return axios.post(process.env.BASE_URL+""+loan.pk).then(res => res.data._embedded.loanAccounts).catch((err)=>{
-            console.error(err);
-    })
-
-    }
-    
-    
-    modifyLoan(loan:Loan){
-            let l:Loan = new Loan();
-            
-         axios.put(process.env.BASE_URL+""+loan.pk).then(res => res.data._embedded.loanAccounts).catch((err)=>{
-            console.error(err);
-          
-        }).finally(()=>{
-            return loan;
-        })
-    }
-    
-    
-    deleteLoan(loan:Loan){
-        return axios.delete(process.env.BASE_URL+""+loan.pk).then(res => res.data._embedded.loanAccounts).catch((err)=>{
-            console.error(err);
-        }).finally(()=>{
-            return loan;
-        })
-    };
-
-
-    getByPrimaryKey(pk:number){
-        return axios.get(process.env.BASE_URL +"/"+ pk).then(res => res.data._embedded.loanAccounts).catch((err)=>{
-            console.error(err);
-        });
-    }
-
-
-
-   
 }
+
+// Define the type for the Loan
+
+
+
+
+// Define the function to get all loans
+export const getAllLoans = async (): Promise<Loan[]> => {
+  try {
+    // Make a GET request to /loans and get the data
+    const { data } = await api.get('/');
+    // Return the loans array from the _embedded property
+    console.log(data._embedded.loanAccounts);
+    return data._embedded.loanAccounts;
+  } catch (error) {
+    // Handle any errors and rethrow them
+    console.error(error);
+    throw error;
+  }
+
+};
+
+// Define the function to get a loan by id
+export const getLoanByPk = async (pk: number): Promise<Loan> => {
+  try {
+    // Make a GET request to /loans/{id} and get the data
+    const { data } = await api.get<Loan>(`/${pk}`);
+    // Return the loan object
+    return data;
+  } catch (error) {
+    // Handle any errors and rethrow them
+    console.error(error);
+    throw error;
+  }
+};
+
+// Define the function to create a new loan
+export const createLoan = async (loan: Loan): Promise<Loan> => {
+  try {
+    // Make a POST request to /loans with the loan object as the body and get the data
+    const { data } = await api.post<Loan>('/', loan);
+    // Return the created loan object
+    return data;
+  } catch (error) {
+    // Handle any errors and rethrow them
+    console.error(error);
+    throw error;
+  }
+};
+
+// Define the function to update an existing loan
+export const updateLoan = async (id: number, loan: Loan): Promise<Loan> => {
+  try {
+    // Make a PUT request to /loans/{id} with the loan object as the body and get the data
+    const { data } = await api.put<Loan>(`/${id}`, loan);
+    // Return the updated loan object
+    return data;
+  } catch (error) {
+    // Handle any errors and rethrow them
+    console.error(error);
+    throw error;
+  }
+};
+
+// Define the function to delete an existing loan
+export const deleteLoan = async (id: number): Promise<void> => {
+  try {
+    // Make a DELETE request to /loans/{id}
+    await api.delete(`/${id}`);
+  } catch (error) {
+    // Handle any errors and rethrow them
+    console.error(error);
+    throw error;
+  }
+};
+
+
+

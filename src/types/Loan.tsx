@@ -1,19 +1,24 @@
+import { UUID } from "crypto";
 import Account from "./Account";
 import { LoanType } from "./LoanType";
 import User from "./User";
 
-export default class Loan {
+export default interface Loan {
 
-    pk!: number;
 
-    owner!: User;
-    dateCreated!: Date;
-    paymentDate!: Date;
-    account!: Account;
-    totalPaid!: number;
-    initialAmount!: number;
-    rate!: 5;
-    loanType!: LoanType;
 
+    pk: number;
+    loanId: UUID;
+    principal: number;
+    rate: number;
+    initialAmount: number;
+    loanTerm: number;
+    dueDate: Date;
+    startDate: Date;
+    loanType: LoanType;
+    account:Account;
+
+
+   
 
 }

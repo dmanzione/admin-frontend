@@ -18,7 +18,7 @@ export default class AccountService {
             return AccountService.instance;
         }
     }
-    getAccountTypesList() {
+    public getAccountTypesList(){
         return axios.get(this.accountTypesListUrl).then(res=>{
             return res.data._embedded.accountTypes;
         }).catch(err=>{
@@ -27,7 +27,7 @@ export default class AccountService {
         });
     }
 
-    getAccountType(pk:number) {
+    public getAccountType(pk:number) {
         return axios.get(this.accountTypesListUrl + '/' + pk).then(res=>{   
             return  res.data._embedded.accountType;
         })     

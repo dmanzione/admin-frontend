@@ -10,3 +10,11 @@ export enum AccountType {
     UNKNOWN
 
 }
+
+
+export function getType(type: string): AccountType  {
+    return AccountType[type as keyof typeof AccountType];
+  }
+
+  export default AccountType; 
+   
