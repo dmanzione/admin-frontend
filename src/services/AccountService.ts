@@ -9,8 +9,8 @@ const baseURL = 'http://localhost:8080/accounts-api/accounts';
 
 // Create an Axios instance with the base URL
 const api = axios.create({
-  baseURL,
-});
+  baseURL,headers:{'Access-Control-Allow-Origin': '*'}}
+);
 
 // Define the type for the HATEOAS response
 
@@ -37,10 +37,10 @@ export const getAllAccounts = async (): Promise<Account[]> => {
 };
 
 // Define the function to get a loan by id
-export const getAccountById = async (id: number): Promise<Account> => {
+export const getAccountByPk = async (pk: number): Promise<Account> => {
   try {
     // Make a GET request to /loans/{id} and get the data
-    const { data } = await api.get<Account>(`/${id}`);
+    const { data } = await api.get<Account>(`/${pk}`);
     // Return the loan object
     return data;
   } catch (error) {
@@ -65,10 +65,10 @@ export const createAccount = async (loan: Account): Promise<Account> => {
 };
 
 // Define the function to update an existing loan
-export const updateAccount = async (id: number, loan: Account): Promise<Account> => {
+export const updateAccount = async (id: number, account: Account): Promise<Account> => {
   try {
     // Make a PUT request to /loans/{id} with the loan object as the body and get the data
-    const { data } = await api.put<Account>(`/${id}`, loan);
+    const { data } = await api.put<Account>(`/${id}`, account);
     // Return the updated loan object
     return data;
   } catch (error) {

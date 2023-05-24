@@ -22,7 +22,7 @@ export default function AccountsList() {
       <h1>Accounts List</h1>
       <ul>
         {accounts.map((account) => (
-          <li key={account.pk}>{account.id}</li>
+          <li key={account.pk}>{account.number}</li>
         ))}
       </ul>
     </div>

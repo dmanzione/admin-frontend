@@ -13,7 +13,7 @@ abstract class ApiService {
   private BASE_URL: string;
 
   protected constructor() {
-    this.BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8080";
+    this.BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8080/accounts-api";
   }
 
   async request(endpoint: string, data = {}, method = "get") {

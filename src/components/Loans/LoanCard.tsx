@@ -9,6 +9,9 @@ import { number } from "yup";
 import { UUID, randomUUID } from "crypto";
 import AccountStatus from "../../types/AccountStatus";
 import AccountType from "../../types/AccountType";
+import Customer from "../../types/Customer";
+import { UsState } from "../../types/UsState";
+import Employee from "../../types/Employee";
 
 /*
  {
@@ -40,14 +43,43 @@ const LoanCard = () => {
     rate: 10,
     account: {
       pk: 0,
-      id: "1d0cf375-7d01-4491-93a3-dc8d4d519d53",
+      number: "1d0cf375-7d01-4491-93a3-dc8d4d519d53",
       balance: 10000,
-      owner:2,
-      dateCreated: new Date(),
+      customer:{pk:0,id:"123123",dateCreated:new Date(),firstName:"John",
+         lastName:"Doe",
+        email:"upchh@example.com",
+        phone:"1234567890",
+        address: {
+         
+          street1: "123 Main St",
+          street2: null,
+          city: "New York",
+          state: UsState.NY,
+          zipCode: "10001",
+         },status:AccountStatus.OPEN,role:3,
+        },
+      startDate: new Date(),
       status: AccountStatus.OPEN,
       type: AccountType.CHECKING,
-      rate:10
-    },
+      rate:10,
+      bankAgent:{pk:0,id:"123123",dateCreated:new Date(),firstName:"John",
+      lastName:"Doe",
+     email:"upchh@example.com",
+     phone:"1234567890",
+     address: {
+      
+       street1: "123 Main St",
+       street2: null,
+       city: "New York",
+       state: UsState.NY,
+       zipCode: "10001",
+      },status:AccountStatus.OPEN,role:3
+     },
+     dueDate:new Date()
+
+    }
+   
+    
  
     
   });
@@ -120,7 +152,7 @@ const LoanCard = () => {
           <br />
           Loan Type: {formatLoanType(loan!.loanType)}
           <br />
-          Account Number: {loan!.account.id}
+          Account Number: {loan!.account.number}
         </Card.Text>
       </Card.Body>
     </Card>

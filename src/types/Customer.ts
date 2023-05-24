@@ -5,6 +5,7 @@ import User from "./User";
 
 class Customer extends User {
   constructor(
+    
     id: string,
     dateCreated: Date,
     firstName: string,

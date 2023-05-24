@@ -7,8 +7,8 @@ export default interface Loan {
 
 
 
-    pk: number;
-    loanId: UUID;
+    pk: number|null;
+    loanId: string|null;
     principal: number;
     rate: number;
     initialAmount: number;

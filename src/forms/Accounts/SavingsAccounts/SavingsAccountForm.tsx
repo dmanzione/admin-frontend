@@ -4,41 +4,46 @@ import { Link } from "react-router-dom";
 import AccountStatus, {
   getAllAccountStatuses,
   getStatus,
-} from "../../types/AccountStatus";
+} from "../../../types/AccountStatus";
 import { useEffect, useState } from "react";
 import AccountType, {
   getAccountTypes,
   getName,
   getType,
-} from "../../types/AccountType";
+} from "../../../types/AccountType";
 
-import { createAccount } from "../../services/AccountService";
-import Account from "../../types/Account";
-import Customer from "../../types/Customer";
-import Employee from "../../types/Employee";
+import { createAccount } from "../../../services/AccountService";
+import Account from "../../../types/Account";
+import Customer from "../../../types/Customer";
+import Employee from "../../../types/Employee";
 import { number } from "yup";
-import { UsState } from "../../types/UsState";
-import User from "../../types/User";
-import Role from "../../types/Role";
-import { CustomerDto, UserDto, getCustomers, getEmployees } from "../../services/UserService";
+import { UsState } from "../../../types/UsState";
+import User from "../../../types/User";
+import Role from "../../../types/Role";
+import { CustomerDto, UserDto, getCustomers, getEmployees } from "../../../services/UserService";
 
-function EditAccountForm(props: { account: Account }) {
-  const [account, setAccount] = useState<Account>(
-    props.account
+function AccountForm(props: { accountType: AccountType }) {
+  const [accountType, setAccountType] = useState<AccountType>(
+    props.accountType
   );
-  const [accountType, setAccountType] = useState<AccountType>(account.type);
-  const [accountN, setAccountN] = useState<string>(account.number);
-  const [pk, setPk] = useState<number| null>(account.pk);
-  const [balance, setBalance] = useState<number>(account.balance);
-  const [rate, setRate] = useState<number>(account.rate);
-  const dateCreated:Date = account.startDate;
-  const [agentId, setAgentId] = useState<string|undefined>(account.bankAgent?.id);
-  const [customerId, setCustomerId] = useState<string|undefined>(account.customer?.id);
+
+  const [accountN, setAccountN] = useState<string>("123345567");
+  const [pk, setPk] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(0);
+  const [rate, setRate] = useState<number>(5);
+  const [dueDate, setDueDate] = useState<Date>(new Date());
+  const [dateCreated, setDateCreated] = useState<Date>(new Date());
+  const [type, setType] = useState<AccountType>(AccountType.CHECKING);
+  const [agentId, setAgentId] = useState<string>("E-12345678");
+  const [customerId, setCustomerId] = useState<string>("C-12345678");
+  const [status, setStatus] = useState<AccountStatus>(AccountStatus.OPEN);
   const [customers, setCustomers] = useState<Array<UserDto>>([]);
   const [employees, setEmployees] = useState<Array<UserDto>>([]);
   const [show, setShow] = useState(false);
   const [customer,setCustomer] = useState<UserDto|null>(null);
   const [employee,setEmployee] = useState<UserDto|null>(null);
+  const [owner, setOwner] = useState<CustomerDto>();
+  const [bankAgent, setBankAgent] = useState<UserDto|null>(null);
   const [accountStatus, setAccountStatus] = useState<AccountStatus>(
     AccountStatus.OPEN
   );
@@ -49,9 +54,6 @@ function EditAccountForm(props: { account: Account }) {
     baseURL,headers:{'Access-Control-Allow-Origin': '*'}}
   );
   useEffect(() => {
-
-   const fetchUsers = ()=>{
-
    api.get("http://localhost:8080/accounts-api/users")
       .then((res) => {
          
@@ -67,41 +69,36 @@ function EditAccountForm(props: { account: Account }) {
 
         console.log(err);
       });
-    }
-    fetchUsers();
+    
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    dateCreated.setFullYear(dateCreated.getFullYear()+30)
     const account: Account = {
-      pk:pk,
-      number:accountN,
       type: accountType,
       status: accountStatus,
       customer: customer,
       bankAgent:employee,
-      
-      
+
+      pk:null,
       startDate:dateCreated,
 
       balance: balance,
       rate: rate,
-    
+      number:"02310231203",
       dueDate: dateCreated,
     
     };
-    api.put(`http://localhost:8080/accounts-api/accounts/${account.pk}`, account)
+    api.post("http://localhost:8080/accounts-api/accounts", account)
       .then((res) => {
         console.log(res);
-        alert("Account updated successfully");
+        alert("Account created successfully");
       })
       .catch((error) => {
         console.error(error);
-        alert("An error occurred while updating the account");
+        alert("An error occurred while creating the account");
       });
-      handleClose();
-
-      window.location.reload();
   };
 
   const handleClose = () => setShow(false);
@@ -109,12 +106,12 @@ function EditAccountForm(props: { account: Account }) {
 
   return (
     <Container>
-      <Button variant="link" onClick={handleShow}>
-        Edit Account
+      <Button variant="primary" onClick={handleShow}>
+        Open New Savings Account
       </Button>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Account</Modal.Title>
+          <Modal.Title>Open Account</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-5">
           <Form onSubmit={handleSubmit}>
@@ -124,7 +121,7 @@ function EditAccountForm(props: { account: Account }) {
                 as="select"
                 value={accountType}
                 onChange={(e) => setAccountType(getType(e.target.value))}
-                disabled
+                disabled={accountType === AccountType.SAVINGS}
               >
                 {getAccountTypes().map((t) => (
                   <option key={t} value={t}>
@@ -139,12 +136,11 @@ function EditAccountForm(props: { account: Account }) {
                 as="select"
                 value={accountStatus}
                 onChange={(e) => setAccountStatus(getStatus(e.target.value))}
-                
               >
                 {getAllAccountStatuses().map((status) => (
                   <option key={status} value={status}>
                     {status}
-                  </option> 
+                  </option>
                 ))}
               </Form.Control>
             </Form.Group>
@@ -162,7 +158,6 @@ function EditAccountForm(props: { account: Account }) {
                   })
                 
                 }}
-                
               >
                 {customers.map((customer) => (
                   <option key={customer.id} value={customer.id}>
@@ -221,4 +216,4 @@ function EditAccountForm(props: { account: Account }) {
     </Container>
   );
 }
-export default EditAccountForm;
+export default AccountForm;

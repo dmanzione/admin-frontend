@@ -10,7 +10,7 @@ const LoanDashboard = () => {
     getAllLoans().then(loans => setLoans(loans)).catch(err => console.log(err));
     console.log(loans);
     console.log(loans)
-  },[loans])
+  },[])
 
   
   return (
