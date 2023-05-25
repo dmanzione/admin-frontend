@@ -15,6 +15,7 @@ interface LoanFormProps{
 
 function LoanForm(props: { accountType: AccountType })  {
     const accountType = props.accountType;
+    const [accountNumber, setAccountNumber] = useState<string>();
     const [loan,setLoan] = useState<Loan>()
     const [showModal, setShowModal] = useState(false);
     const [customerId,setCustomerId] = useState<string>();
@@ -36,7 +37,19 @@ function LoanForm(props: { accountType: AccountType })  {
     startDate: new Date(),
 
   });
-  const [accountState, setAccountState] = useState<Account>(account!);
+  const [accountState, setAccountState] = useState<Account>({
+    balance:0,
+    pk:null,
+    status: AccountStatus.OPEN,
+    type: getType(accountType),
+    bankAgent: null,
+    customer:null,
+     dueDate:new Date(),
+    number: "A-123123123",
+    rate: 4,
+    startDate: new Date(),
+
+  });
 const [customers, setCustomers] = useState<UserDto[]>([]);
 const [employees,setEmployees] = useState<Array<UserDto>>([]);
   const handleLoanChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,20 +109,12 @@ return (
   </Button>
   <Modal show={showModal} onHide={() => setShowModal(false)}>
   <Modal.Header closeButton>
-  <Modal.Title>Loan Form</Modal.Title>
+  <Modal.Title><small>Loan Form</small></Modal.Title>
   </Modal.Header>
   <Modal.Body>
   <Form onSubmit={handleSubmit}>
       <h3>Loan</h3>
-      <Form.Group controlId="loanId">
-        <Form.Label>Loan ID</Form.Label>
-        <Form.Control
-          type="text"
-          name="loanId"
-          value={loanState.loanId || ''}
-          onChange={handleLoanChange}
-        />
-      </Form.Group>
+      
       <Form.Group controlId="principal">
         <Form.Label>Principal</Form.Label>
         <Form.Control
@@ -146,16 +151,9 @@ return (
           onChange={handleLoanChange}
         />
       </Form.Group>
-      <h3>Account</h3>
-      <Form.Group controlId="number">
-        <Form.Label>Number</Form.Label>
-        <Form.Control
-          type="text"
-          name="number"
-          value={accountState.number}
-          onChange={handleAccountChange}
-        />
-      </Form.Group>
+      <Modal.Title><small>Account</small></Modal.Title>
+      
+     
       <Form.Group controlId="balance">
         <Form.Label>Balance</Form.Label>
         <Form.Control

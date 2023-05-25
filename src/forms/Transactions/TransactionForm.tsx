@@ -63,9 +63,12 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
 
     api
       .post(baseURL+ `transactions/`, transaction)
-      .then((res) => {})
+      .then((res) => {
+
+        alert("Transaction successful: " +res.data.message);
+      })
       .catch((err) => {
-        console.log(err);
+        alert("There was an error in the transaction: " + err.message);
       });
   };
 
@@ -93,13 +96,13 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
           {accounts.map((account: Account) => {
             return (
               <option key={account.number} value={account.number}>
-                {account.customer?.firstName||'' +
+                {account.customer?.firstName +
                   " " +
-                  account.customer?.lastName||'' +
+                  account.customer?.lastName +
                   " | " +
-                  getName(account.type) || "" +
+                  getName(account.type) +
                   " | " +
-                  account.number || " "}
+                  account.number }
               </option>
             );
           })}
@@ -123,13 +126,13 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
           {accounts.map((account: Account) => {
             return (
               <option key={account.number} value={account.number}>
-                {account.customer?.firstName||'' +
+                {account.customer?.firstName +
                   " " +
-                  account.customer?.lastName||'' +
+                  account.customer?.lastName +
                   " | " +
-                  getName(account.type) || "" +
+                  getName(account.type) +
                   " | " +
-                  account.number || " "}
+                  account.number}
               </option>
             );
           })}

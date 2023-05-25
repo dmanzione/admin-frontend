@@ -120,7 +120,7 @@ const AccountsDashboard = () => {
               </tr> 
             </thead> 
             <tbody> 
-              {accounts.map(account => (
+              {filteredAccounts.map(account => (
                 <tr key={account.pk}>
                   <td>{account.number}</td> 
                   <td>{account.customer ? `${account.customer.firstName} ${account.customer.lastName}` : 'N/A'}</td> 
@@ -139,7 +139,7 @@ const AccountsDashboard = () => {
               ))}
             </tbody> 
           </Table> 
-        {/* <LoanForm accountType = {AccountType.LOAN}/>  */}
+        <LoanForm accountType = {AccountType.LOAN}/> 
         <CheckingAccountForm accountType={AccountType.CHECKING}/>
         <SavingsAccountForm accountType={AccountType.SAVINGS}/>
         <CreditCardAccountForm accountType={AccountType.CREDIT}/>
