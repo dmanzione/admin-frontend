@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
-import { Account } from '../Accounts/Account';
+import Account from '../../types/Account';
 import Transaction from '../../types/Transaction';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -42,13 +42,17 @@ const TransactionInfo: React.FC = () => {
       <Card.Body>
         <Card.Title>Transaction</Card.Title>
         <Card.Text>
-          From: {(transaction||'N/A').toString()|| 'N/A'}
-          <br />
-          To: {(transaction||'N/A').toString() || 'N/A'}
-          <br />
-          Amount: {transaction!.amount || 'N/A'}
-          <br />
-          Date: {transaction!.date.toDateString() || 'N/A'}
+          {transaction?.fromAccount &&
+          "From: " + transaction?.fromAccount?.number + " " + transaction?.fromAccount?.customer?.firstName + " " + transaction?.fromAccount?.customer?.lastName + <br />}
+         
+          {transaction?.toAccount &&
+          "To: " + transaction?.toAccount?.number + " " + transaction?.toAccount?.customer?.firstName + " " + transaction?.toAccount?.customer?.lastName + <br />}
+        
+          {transaction?.category && "Type: " + transaction?.category + <br />}
+
+          {transaction?.amount && "Amount: " + transaction?.amount + <br />}
+          {transaction?.date && "Date: " + transaction?.date + <br />}
+          
 
         </Card.Text>
       </Card.Body>

@@ -3,6 +3,7 @@ import { Button, Container, Modal, Table } from 'react-bootstrap';
 import Account from '../../types/Account';
 import Transaction from '../../types/Transaction';
 import axios from 'axios';
+import TransactionType from '../../types/TransactionType';
 interface TransactionHistoryProps {
   
   account: Account;
@@ -14,7 +15,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = (props: Transactio
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 
     const api = axios.create({
-        baseURL: 'http://localhost:8080/accounts-api/transactions', headers:{
+        baseURL: `http://localhost:8080/accounts-api/accounts/${account.pk}/transactions/`, headers:{
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             // 'Authorization': `Bearer ${account.token}`,
@@ -33,7 +34,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = (props: Transactio
                 
                 setTransactions(res.data)).catch(err => console.log(err));
 
-                setTransactions(transactions => transactions.filter(transaction => transaction.fromAccount!.pk === account.pk || transaction.toAccount!.pk === account.pk))
+              
                 
                
     },[])
@@ -65,10 +66,20 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = (props: Transactio
           <tbody>
             {transactions.map((transaction) => (
               <tr key={transaction.pk}>
-                <td>{transaction.fromAccount?.toString()||'N/A'}</td>
-                <td>{transaction.toAccount?.toString()|| 'N/A'}</td>
+                <td>Transaction Type: {TransactionType[transaction.category!]}</td>
+                {transaction.fromAccount && (
+                  <td>
+                    {transaction.fromAccount.number}{' '} {transaction.fromAccount.customer!.firstName}{' '} {transaction.fromAccount.customer!.lastName}
+                  </td>
+                )}
+                {transaction.toAccount && (
+                  <td>
+                    {transaction.toAccount.number}{' '} {transaction.toAccount.customer!.firstName}{' '} {transaction.toAccount.customer!.lastName}
+                  </td>
+                )}
+
                 <td>{transaction.amount}</td>
-                <td>{transaction.date.toLocaleDateString()}</td>
+                <td>{transaction.date.toString().substring(0,10)}</td>
               </tr>
             ))}
           </tbody>

@@ -9,6 +9,6 @@ export default interface Transaction{
     amount: number,
     date: Date,
     category:TransactionType|null,
-    status: TransactionStatus|null,
+  
 
 }

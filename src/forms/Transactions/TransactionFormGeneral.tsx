@@ -11,16 +11,15 @@ interface TransactionHistoryProps {
   account: Account;
 }
 
-const TransactionForm: React.FC<TransactionHistoryProps> = (
-  props: TransactionHistoryProps
+const TransactionFormGeneral: React.FC = (
+  
 ) => {
-  const account: Account = props.account;
 
   const [fromAccountNumber, setFromAccountNumber] =
-    useState<string>(account.number!);
-  const [toAccountNumber, setToAccountNumber] = useState<string>(account.number!);
+    useState<string>("A+123123");
+  const [toAccountNumber, setToAccountNumber] = useState<string>("");
   const [fromAccount, setFromAccount] = useState<Account>();
-  const [toAccount, setToAccount] = useState<Account>(account);
+  const [toAccount, setToAccount] = useState<Account>();
   const [amount, setAmount] = useState(0);
   const [accounts, setAccounts] = useState<Account[]>(new Array<Account>());
   const [show, setShow] = useState<boolean>(false);
@@ -38,8 +37,8 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
       .get("http://localhost:8080/accounts-api/accounts/accountslist")
       .then((res) => {
         setAccounts(res.data);
+        setToAccount(accounts[0]||null)
         
-  
       })
       .catch((err) => {
         console.log(err);
@@ -62,10 +61,10 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
       .post(`http://localhost:8080/accounts-api/transactions/`, transaction)
       .then((res) => {
 
-        alert("Transaction successful: " +res.data.statusText);
+        alert("Transaction successful: " +res.statusText);
       })
-      .catch((err) => {
-        alert("There was an error in the transaction: " + err.response.data.statusText);
+      .catch((err:Error) => {
+        alert("There was an error in the transaction: " + err.message);
       });
   };
 
@@ -89,16 +88,19 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
 
            setTransactionType(e.target.value as TransactionType);
            if(transactionType===TransactionType.DEPOSIT){
-            setToAccount(account);
-           }
-           if(transactionType===TransactionType.WITHDRAWAL){
-            setFromAccount(account);
-           }
-           if(transactionType===TransactionType.TRANSFER){
-            setFromAccount(account);
-            setToAccount(account);
-           }
-          
+                setFromAccount(undefined);
+                setToAccount(accounts[0]||undefined);
+            }
+          if(transactionType===TransactionType.WITHDRAWAL){
+                setFromAccount(accounts[0]||undefined);
+                setToAccount(undefined);
+            }
+            if(transactionType===TransactionType.TRANSFER){
+                setFromAccount(accounts[0]||undefined);
+                setToAccount(accounts[0]||undefined);
+            }
+        
+
         }}
         required>
           {Object.values(TransactionType).map((t) => (
@@ -190,4 +192,4 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
   );
 };
 
-export default TransactionForm;
+export default TransactionFormGeneral;

@@ -1,7 +1,7 @@
 
 
 import axios from 'axios';
-import Loan from '../types/Loan';
+import Loan from '../types/LoanAccount';
 
 
 // Define the base URL for the API

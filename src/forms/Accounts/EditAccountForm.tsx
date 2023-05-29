@@ -27,11 +27,9 @@ function EditAccountForm(props: { account: Account }) {
     props.account
   );
   const [accountType, setAccountType] = useState<AccountType>(account.type);
-  const [accountN, setAccountN] = useState<string>(account.number);
-  const [pk, setPk] = useState<number| null>(account.pk);
+  const [accountN, setAccountN] = useState<string>(account.number!);
+  const [pk, setPk] = useState<number| null>();
   const [balance, setBalance] = useState<number>(account.balance);
-  const [rate, setRate] = useState<number>(account.rate);
-  const dateCreated:Date = account.startDate;
   const [agentId, setAgentId] = useState<string|undefined>(account.bankAgent?.id);
   const [customerId, setCustomerId] = useState<string|undefined>(account.customer?.id);
   const [customers, setCustomers] = useState<Array<UserDto>>([]);
@@ -82,12 +80,10 @@ function EditAccountForm(props: { account: Account }) {
       bankAgent:employee,
       
       
-      startDate:dateCreated,
+      dateCreated:null,
 
       balance: balance,
-      rate: rate,
     
-      dueDate: dateCreated,
     
     };
     api.put(`http://localhost:8080/accounts-api/accounts/${account.pk}`, account)
@@ -203,14 +199,7 @@ function EditAccountForm(props: { account: Account }) {
                 onChange={(e) => setBalance(Number(e.target.value))}
               />
             </Form.Group>
-            <Form.Group controlId="rate">
-              <Form.Label>Rate</Form.Label>
-              <Form.Control
-                type="number"
-                value={rate}
-                onChange={(e) => setRate(Number(e.target.value))}
-              />
-            </Form.Group>
+           
            
             <Button variant="primary m-2" type="submit">
               Submit

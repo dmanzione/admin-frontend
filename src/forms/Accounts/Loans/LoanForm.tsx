@@ -1,269 +1,178 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Button, Modal, Container } from 'react-bootstrap';
-import axios from 'axios';
+import { Button, Form } from "react-bootstrap";
+import axios from "axios";
+import AccountStatus, {
+  getAllAccountStatuses,
+  getStatus,
+} from "../../../types/AccountStatus";
+import { useEffect, useState } from "react";
+import AccountType, { getAccountTypes } from "../../../types/AccountType";
 
-import Loan from '../../../types/Loan';
-import Account from '../../../types/Account';
-import { UserDto } from '../../../services/UserService';
-import AccountType, { getAccountTypes, getName, getType } from '../../../types/AccountType';
-import AccountStatus, { getAllAccountStatuses, getStatus } from '../../../types/AccountStatus';
-import { LoanType } from '../../../types/LoanType';
+import Account from "../../../types/Account";
+import { UserDto } from "../../../services/UserService";
 
-interface LoanFormProps{
-    accountType: AccountType
-}
-
-function LoanForm(props: { accountType: AccountType })  {
-    const accountType = props.accountType;
-    const [accountNumber, setAccountNumber] = useState<string>();
-    const [loan,setLoan] = useState<Loan>()
-    const [showModal, setShowModal] = useState(false);
-    const [customerId,setCustomerId] = useState<string>();
-    const [agentId,setAgentId] = useState<string>();
-    const [account,setAccount] = useState<Account>();
-    const [balance, setBalance] = useState<number>();
-    const [customer,setCustomer] = useState<UserDto>();
-    const [agent,setAgent] = useState<UserDto>();
-  const [loanState, setLoanState] = useState<Loan>({
-    account:account!,
-    dueDate: new Date(),
-    initialAmount: 0,
-    loanId: null,
-    loanTerm: 0,
-    loanType: LoanType.AUTO_LOAN,
-    pk:null,
-    principal:0,
-    rate:5,
-    startDate: new Date(),
-
-  });
-  const [accountState, setAccountState] = useState<Account>({
-    balance:0,
-    pk:null,
-    status: AccountStatus.OPEN,
-    type: getType(accountType),
-    bankAgent: null,
-    customer:null,
-     dueDate:new Date(),
-    number: "A-123123123",
-    rate: 4,
-    startDate: new Date(),
-
-  });
-const [customers, setCustomers] = useState<UserDto[]>([]);
-const [employees,setEmployees] = useState<Array<UserDto>>([]);
-  const handleLoanChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setLoanState((prevState) => ({ ...prevState, [name]: value }));
-  };
-  const [accountStatus, setAccountStatus] = useState<AccountStatus>();
-
-  const handleAccountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setAccountState((prevState) => ({ ...prevState, [name]: value }));
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Submit form data
-    loanState.account =  accountState;
-
-    try {
-      const response = await api.post(
-        'http://localhost:8080/accounts-api/loan-accounts',
-         loanState
-      );
-      console.log('Form submitted successfully:', response.data);
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    }
-  };
-  const baseURL = 'http://localhost:8080/accounts-api/accounts';
-
+function AccountForm() {
+  const [balance, setBalance] = useState<number>(0);
+  const [rate, setRate] = useState<number>(5);
+  const [dateCreated] = useState<Date>(new Date());
+  const [type] = useState<AccountType>(AccountType.LOAN);
+  const [status, setStatus] = useState<AccountStatus>(AccountStatus.OPEN);
+  const [customers, setCustomers] = useState<UserDto[]>([]);
+  const [employees, setEmployees] = useState<UserDto[]>([]);
+  const [customer, setCustomer] = useState<UserDto | null>(null);
+  const [employee, setEmployee] = useState<UserDto | null>(null);
+  const [agentId, setAgentId] = useState<string>();
+  const [customerId, setCustomerId] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
   // Create an Axios instance with the base URL
   const api = axios.create({
-    baseURL,headers:{'Access-Control-Allow-Origin': '*'}}
-  );
+    headers: { "Access-Control-Allow-Origin": "*" },
+  });
+
   useEffect(() => {
-   api.get("http://localhost:8080/accounts-api/users")
-      .then((res) => {
-         
-        let customerz:UserDto[] = res.data.filter((usr:UserDto)=>usr.role===3);
-        let emps:UserDto[] = res.data.filter((usr:UserDto)=>usr.role===2);
-        setCustomers(customerz);
-        setEmployees(emps);
-            
-      })
-
-      .catch((err) => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      api
+        .get("http://localhost:8080/accounts-api/users")
+        .then((res) => {
+          setCustomers(res.data.filter((usr: UserDto) => usr.role === 3));
        
+          setEmployees(
+            res.data.filter((usr: UserDto) => usr.role === 2 || usr.role === 1)
+          );
+          if (customers.length >= 1) {
+            setCustomerId(customers[0].id);
+            setCustomer(customers[0]);
+          }
+          if (employees.length >= 1) {
+            setAgentId(employees[0].id);
+            setEmployee(employees[0]);
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setLoading(false);
+        });
 
-        console.log(err);
-      });
-    
+      setLoading(false);
+    };
+    fetchUsers();
   }, []);
-return (
-    <Container>
-  <Button variant="primary" onClick={() => setShowModal(true)}>
-  Loan Application
-  </Button>
-  <Modal show={showModal} onHide={() => setShowModal(false)}>
-  <Modal.Header closeButton>
-  <Modal.Title><small>Loan Form</small></Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-  <Form onSubmit={handleSubmit}>
-      <h3>Loan</h3>
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dateCreated.setFullYear(dateCreated.getFullYear() + 30);
+    const account: Account = {
+      type: type,
+      status: status,
+      customer: customer,
+      bankAgent: employee,
+      dateCreated: new Date(),
+
+      balance: balance,
       
-      <Form.Group controlId="principal">
-        <Form.Label>Principal</Form.Label>
-        <Form.Control
-          type="number"
-          name="principal"
-          value={loanState.principal}
-          onChange={handleLoanChange}
-        />
+    };
+    api
+      .post("http://localhost:8080/accounts-api/accounts", account)
+      .then((res) => {
+
+        alert("Account created successfully");
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("An error occurred while creating the account");
+      });
+  };
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Form.Group controlId="type">
+        <Form.Label>Account Type</Form.Label>
+        <Form.Control as="select" value={type} disabled={true}>
+          {getAccountTypes().map((t) => (
+            <option key={t} value={t}>
+              {AccountType[t]}
+            </option>
+          ))}
+        </Form.Control>
       </Form.Group>
-      <Form.Group controlId="rate">
-        <Form.Label>Rate</Form.Label>
+      <Form.Group controlId="status">
+        <Form.Label>Account Status</Form.Label>
         <Form.Control
-          type="number"
-          name="rate"
-          value={loanState.rate}
-          onChange={handleLoanChange}
-        />
+          as="select"
+          value={status}
+          onChange={(e) => setStatus(getStatus(e.target.value))}
+        >
+          {getAllAccountStatuses().map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
+          ))}
+        </Form.Control>
       </Form.Group>
-      <Form.Group controlId="initialAmount">
-        <Form.Label>Initial Amount</Form.Label>
+      <Form.Group controlId="customer">
+        <Form.Label>Customer Name</Form.Label>
         <Form.Control
-          type="number"
-          name="initialAmount"
-          value={loanState.initialAmount}
-          onChange={handleLoanChange}
-        />
+          as="select"
+          value={customerId}
+          onChange={(e) => {
+            setCustomerId(e.target.value);
+            customers.forEach((cust: UserDto) => {
+              if (cust.id === e.target.value) {
+                setCustomer(cust);
+              }
+            });
+          }
+        
+        }
+        defaultValue={customerId}
+        >
+          {customers.map((customer) => (
+            <option key={customer.id} value={customer.id}>
+              {customer.firstName} {customer.lastName}
+            </option>
+          ))}
+        </Form.Control>
       </Form.Group>
-      <Form.Group controlId="loanTerm">
-        <Form.Label>Loan Term</Form.Label>
+      <Form.Group controlId="agent">
+        <Form.Label>Bank Agent Name</Form.Label>
         <Form.Control
-          type="number"
-          name="loanTerm"
-          value={loanState.loanTerm}
-          onChange={handleLoanChange}
-        />
+          as="select"
+          value={agentId}
+          onChange={(e) => {
+            setAgentId(e.target.value);
+            for (let i = 0; i < employees.length; i++) {
+              if (employees[i].id === e.target.value) {
+                setEmployee(employees[i]);
+              }
+            }
+          }}
+          defaultValue={agentId}
+        >
+          {employees.map((employee) => (
+            <option key={employee.id} value={employee.id}>
+              {employee.firstName + " " + employee.lastName}
+            </option>
+          ))}
+        </Form.Control>
       </Form.Group>
-      <Modal.Title><small>Account</small></Modal.Title>
-      
-     
+
       <Form.Group controlId="balance">
         <Form.Label>Balance</Form.Label>
         <Form.Control
           type="number"
-          name="balance"
-          value={accountState.balance}
-          onChange={handleAccountChange}
+          value={balance}
+          onChange={(e) => setBalance(Number(e.target.value))}
         />
       </Form.Group>
       
-            <Form.Group controlId="type">
-              <Form.Label>Account Type</Form.Label>
-              <Form.Control
-                as="select"
-                value={accountType}
-                
-                disabled
-              >
-                {getAccountTypes().map((t) => (
-                  <option key={t} value={t}>
-                    {getName(t)}
-                  </option>
-                ))}
-                
-              </Form.Control>
-            
-            </Form.Group>
-            <Form.Group controlId="status">
-              <Form.Label>Account Status</Form.Label>
-              <Form.Control
-                as="select"
-                value={accountStatus}
-                onChange={(e) => setAccountStatus(getStatus(e.target.value))}
-              >
-                {getAllAccountStatuses().map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="customer">
-              <Form.Label>Customer Name</Form.Label>
-              <Form.Control
-                as="select"
-                value={customerId}
-                onChange={e=>{
-                  setCustomerId(e.target.value);
-                  customers.forEach((cust:UserDto)=>{
-                    if(cust.id===e.target.value){
-                      setCustomer(cust);
-                    }
-                  })
-                
-                }}
-              >
-                {customers.map((customer) => (
-                  <option key={customer.id} value={customer.id}>
-                    {customer.firstName} {customer.lastName}
-                  </option>
-                ))}
-                
-              </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="agent">
-              <Form.Label>Bank Agent Name</Form.Label>
-              <Form.Control
-                as="select"
-                value={agentId}
-                onChange={(e) => {
-                  setAgentId(e.target.value);
-                  for(let i=0;i<employees.length;i++){
-                    if(employees[i].id===e.target.value){
-                      setAgent(employees[i]);
-                    }
-                  }
-              
-                }}
-              >
-                {employees.map((employee) => (
-                  <option key={employee.id} value={employee.id}>
-                    {employee.firstName + " " + employee.lastName}
-                  </option>
-                ))}
-              </Form.Control>
-            </Form.Group>
 
-            <Form.Group controlId="balance">
-              <Form.Label>Balance</Form.Label>
-              <Form.Control
-                type="number"
-                value={balance}
-                onChange={(e) => setBalance(Number(e.target.value))}
-              />
-            </Form.Group>
-      <Button variant="primary" type="submit">
+      <Button variant="primary m-2" type="submit">
         Submit
       </Button>
     </Form>
-
-    </Modal.Body>
-    <Modal.Footer>
-      <Button variant="secondary" onClick={() => setShowModal(false)}>
-        Close
-      </Button>
-    </Modal.Footer>
-
-    </Modal>
-    </Container>
   );
-};
-
-export default LoanForm;
+}
+export default AccountForm;
+function setLoading(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}

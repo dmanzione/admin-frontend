@@ -6,7 +6,7 @@ import { getName } from "../../types/AccountType";
 
 export default function AccountTypes(){
 
-    const loanTypes:AccountType[] =[ AccountType.CHECKING, AccountType.SAVINGS, AccountType.LOAN, AccountType.CREDIT, AccountType.REWARDS_PROGRAM];
+    const loanTypes:AccountType[] =[ AccountType.CHECKING, AccountType.SAVINGS, AccountType.LOAN, AccountType.CREDIT_CARD, AccountType.REWARDS_PROGRAM];
     const [types,setTypes] = useState<AccountType[]>(loanTypes);
     return(
         <ListGroup>

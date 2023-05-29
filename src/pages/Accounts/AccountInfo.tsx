@@ -34,7 +34,7 @@ const AccountInfo = () => {
         return <p>Loading...</p>;
     }
 
-    const { pk, number, customer, startDate, balance, rate, status, type, dueDate, bankAgent } = account;
+    const { pk, number, customer, dateCreated, balance, status, type, bankAgent } = account;
 
     function handleDelete() {
         axios.delete(`http://localhost:8080/accounts-api/accounts/${accountId}`).then((res) => {
@@ -71,17 +71,14 @@ return (
                     <td>{customer ? `${customer.firstName} ${customer.lastName}` : 'N/A'}</td>
                 </tr>
                 <tr>
-                    <td>Start Date:</td>
-                    <td>{new Date(startDate).toLocaleDateString()}</td>
+                    <td>Date Created:</td>
+                    {(dateCreated && (<td>{dateCreated.toString().substring(0,10)}</td>)|| <td>N/A</td>) }
                 </tr>
                 <tr>
                     <td>Balance:</td>
                     <td>${balance.toFixed(2)}</td>
                 </tr>
-                <tr>
-                    <td>Interest Rate:</td>
-                    <td>{rate}%</td>
-                </tr>
+                
                 <tr>
                     <td>Status:</td>
                     <td>{status}</td>
@@ -90,12 +87,7 @@ return (
                     <td>Type:</td>
                     <td>{type}</td>
                 </tr>
-                {dueDate && (
-                    <tr>
-                        <td>Due Date:</td>
-                        <td>{new Date(dueDate).toLocaleDateString()}</td>
-                    </tr>
-                )}
+                
                 {bankAgent && (
                     <tr>
                         <td>Bank Agent:</td>

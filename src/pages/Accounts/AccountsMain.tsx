@@ -1,18 +1,12 @@
 import {
-  Button,
-  Container,
-  Form,
-  Nav,
-  NavDropdown,
-  Navbar,
   Tab,
   Tabs,
 } from "react-bootstrap";
-import AccountsDashboard from "../../components/Accounts/AccountsDashboard";
-import AccountForm from "../../forms/Accounts/SavingsAccounts/SavingsAccountForm";
-import { AccountType } from "../../types/AccountType";
+import AccountsDashboard from "./AccountsDashboard";
 import AccountTypes from "../../components/Accounts/AccountTypes";
-import EditAccountForm from "../../forms/Accounts/EditAccountForm";
+import AccountForms from "./AccountForms";
+import TransactionForm from "../../forms/Transactions/TransactionForm";
+import TransactionHistoryAll from "../../components/Transactions/TransactionHistoryAll";
 // import EditAccountForm from "../../forms/Accounts/EditAccountForm";
 
 export default function AccountMain() {
@@ -30,6 +24,12 @@ export default function AccountMain() {
         </Tab>
         <Tab eventKey="longer-tab" title="Account Types">
           <AccountTypes />
+        </Tab>
+        <Tab eventKey="tab" title="Forms">
+          <AccountForms />
+        </Tab>
+        <Tab eventKey="tab2" title="Transactions">
+          <TransactionHistoryAll />
         </Tab>
       </Tabs>
     </>

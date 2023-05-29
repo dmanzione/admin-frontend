@@ -4,7 +4,7 @@ export enum AccountType {
 
     CHECKING="CHECKING",
     SAVINGS="SAVINGS",
-    CREDIT = "CREDIT",
+    CREDIT_CARD = "CREDIT_CARD",
     LOAN="LOAN",
     REWARDS_PROGRAM="REWARDS_PROGRAM"
 
@@ -18,7 +18,7 @@ export function getType(type: string): AccountType  {
         case'savings':
             return AccountType.SAVINGS;
         case 'credit card':
-            return AccountType.CREDIT;
+            return AccountType.CREDIT_CARD;
         case 'loan':
             return AccountType.LOAN;
         case'rewards program':
@@ -32,7 +32,7 @@ export function getAccountTypes(){
     return [
         AccountType.CHECKING,
         AccountType.SAVINGS,
-        AccountType.CREDIT,
+        AccountType.CREDIT_CARD,
         AccountType.LOAN,
         AccountType.REWARDS_PROGRAM
     ]
@@ -47,7 +47,7 @@ export function getName(type: AccountType): string {
         
         case AccountType.LOAN:
             return "Loan";
-        case AccountType.CREDIT:
+        case AccountType.CREDIT_CARD:
             return "Credit";
         case AccountType.REWARDS_PROGRAM:
             return "Rewards Program";
@@ -63,7 +63,7 @@ export function getAccountTypeInfo(accountType: AccountType): string {
         return 'A checking account is a type of deposit account that allows you to easily access your money for daily transactions.';
       case AccountType.SAVINGS:
         return 'A savings account is a type of deposit account that earns interest and is used to save money for the future.';
-      case AccountType.CREDIT:
+      case AccountType.CREDIT_CARD:
         return 'A credit account is a type of loan account that allows you to borrow money and pay it back over time with interest.';
       case AccountType.LOAN:
         return 'A loan account is a type of credit account that allows you to borrow a fixed amount of money and pay it back over time with interest.';
