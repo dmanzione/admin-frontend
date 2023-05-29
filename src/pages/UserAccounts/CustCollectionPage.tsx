@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import UserList from "../../components/UserAccounts/ListPage/UserList";
-import UserService from "../../services/UserService";
+import UserService from "../../services/UserServiceJames";
 import User from "../../types/User";
 import Loader from "../../components/Loader";
 

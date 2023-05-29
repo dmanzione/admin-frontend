@@ -2,7 +2,7 @@ import { Button, Modal } from "react-bootstrap";
 import User from "../../../types/User";
 import { Dispatch, SetStateAction, useState } from "react";
 import useDeletionConfirmation from "../../../hooks/useDeletionConfirmation";
-import UserService, { UpdateDto } from "../../../services/UserService";
+import UserService, { UpdateDto } from "../../../services/UserServiceJames";
 import { useNavigate } from "react-router-dom";
 import AccountStatus from "../../../types/AccountStatus";
 import FormComponent from "../../FormComponent";

@@ -2,9 +2,9 @@ import {
   Tab,
   Tabs,
 } from "react-bootstrap";
-import AccountsDashboard from "./AccountsDashboard";
+import AccountsDashboard from "../../components/Accounts/AccountsDashboard";
 import AccountTypes from "../../components/Accounts/AccountTypes";
-import AccountForms from "./AccountForms";
+import AccountForms from "../../forms/Accounts/AccountForms";
 import TransactionForm from "../../forms/Transactions/TransactionForm";
 import TransactionHistoryAll from "../../components/Transactions/TransactionHistoryAll";
 // import EditAccountForm from "../../forms/Accounts/EditAccountForm";

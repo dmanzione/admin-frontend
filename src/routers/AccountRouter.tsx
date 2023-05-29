@@ -8,7 +8,8 @@ import AccountInfo from "../pages/Accounts/AccountInfo";
 import CheckingAccountForm from "../forms/Accounts/CheckingAccounts/CheckingAccountForm";
 import SavingsAccountForm from "../forms/Accounts/SavingsAccounts/SavingsAccountForm";
 import CreditCardAccountForm from "../forms/Accounts/CreditCardAccounts/CreditCardAccountForm";
-import LoanForm from "../forms/Accounts/Loans/LoanForm";
+import AccountFinancialProducts from "../pages/Accounts/AccountFinancialProducts";
+import LoanAccountForm from "../forms/Accounts/LoanAccounts/LoanAccountForm";
 
 
 const AccountRouter: React.FC = () => {
@@ -21,7 +22,8 @@ const AccountRouter: React.FC = () => {
           <Route path="/checking/new" element={<CheckingAccountForm/>}/>
           <Route path="/savings/new" element={<SavingsAccountForm/>}/>
           <Route path="/credit/new" element={<CreditCardAccountForm/>}/>
-          <Route path="/loan/new" element={<LoanForm/>}/>
+          <Route path="/loan/new" element={<LoanAccountForm/>}/>
+          <Route path="/:accountId/financial-products" element={<AccountFinancialProducts />} />
           
 
       

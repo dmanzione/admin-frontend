@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/Loader";
-import UserService from "../../services/UserService";
+import UserService from "../../services/UserServiceJames";
 import User from "../../types/User";
 import NotFound from "../NotFound";
 import UserInfoCard from "../../components/UserAccounts/ViewPage/UserInfoCard";

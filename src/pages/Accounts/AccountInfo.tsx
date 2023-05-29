@@ -3,10 +3,12 @@ import axios from 'axios';
 import Account from '../../types/Account';
 import { useParams } from 'react-router-dom';
 import { Button, Table } from 'react-bootstrap';
-import EditAccountForm from '../../forms/Accounts/EditAccountForm';
 import TransactionForm from '../../forms/Transactions/TransactionForm';
 import TransactionHistory from '../../components/Transactions/TransactionHistory';
-
+import FinancialProduct from '../../types/FinancialProduct';
+import Card from '../../types/Card';
+import Loan from '../../types/Loan';
+import Reward from '../../types/Reward';
 const useAccountId = () => {
     // Replace this with your logic for retrieving the accountId
     const accountId = useParams().accountId;
@@ -16,19 +18,60 @@ const useAccountId = () => {
 const AccountInfo = () => {
     const [account, setAccount] = useState<Account>();
     const accountId = useAccountId();
+    const [loans, setLoans] = useState<Loan[]>([]);
+    const [cards, setCards] = useState<Card[]>([]);
+    const [reward, setReward] = useState<Reward[]>([]);
 
+    const [financialProducts, setFinancialProducts] = useState<FinancialProduct[]>([]);
+    const api = axios.create({
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        }});
     useEffect(() => {
-        const fetchAccount = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/accounts-api/accounts/${accountId}`);
-                setAccount(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
 
-        fetchAccount();
-    }, [accountId]);
+      let accountPk:number;
+                
+                api.get(`http://localhost:8080/accounts-api/accounts/${accountId}`).then(response => {
+                    
+                setAccount(response.data);
+                 accountPk = account?.pk!;
+               
+
+                }).catch(err=>{
+                    console.log(err);
+                })
+               
+                api.get(`http://localhost:8080/accounts-api/financial-products`).then(prods=>{
+              
+                console.log(prods.data);
+                
+                let filtered = prods.data.filter((prod:FinancialProduct)=>prod!.account?.pk === accountPk);
+                setFinancialProducts(filtered);
+                for(let i = 0;i<filtered.length;i++){
+                   
+                    if(filtered[i].name==='loan'){
+                        setLoans(loans=>[...loans, filtered[i] as Loan])
+                       
+                    }
+                    if(filtered[i].name==='card'){
+                                                setCards(cards=>[...cards, filtered[i] as Card])
+                                               
+                                            }
+                    if(filtered[i].name==='reward'){
+                        setReward(reward=>[...reward, filtered[i] as Reward])
+                        
+                        console.log(reward);
+                       
+
+                    }
+                };
+
+                }).catch(err=>{
+                    console.log(err);
+                })
+  
+    
+    }, []);
 
     if (!account) {
         return <p>Loading...</p>;
@@ -94,11 +137,47 @@ return (
                         <td>{`${bankAgent.firstName} ${bankAgent.lastName}`}</td>
                     </tr>
                 )}
+                {loans.length>0&&(
+                    <>                  <h2>Loans</h2>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Loan ID</th>
+                                <th>Loan Amount</th>
+                                <th>Interest Rate</th>
+                                <th>Monthly Payment</th>
+                                <th>Term in Months</th>
+                                <th>Remaining Balance</th>
+                                <th>Payments Made</th>
+                                <th>Total Interest</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loans.map((loan) => (
+                                <tr key={loan.pk}>
+                                    <td>{loan.pk}</td>
+                                    <td>${loan.principalAmount.toFixed(2)}</td>
+                                    <td>{loan.interestRate}</td>
+                                    <td>{loan.monthlyPayment}</td>
+                                    <td>{loan.termInMonths}</td>
+                                    <td>{loan.remainingBalance}</td>
+                                    <td>
+                                        {loan.numberOfPaymentsMade}
+                                    </td>
+                                    <td>{loan.totalInterestPaid}</td>
+                                    
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    </>
+                )}
+               
             </tbody>
         </Table>
         <TransactionForm  account={account} />
         <TransactionHistory account={account} />
-        <EditAccountForm account={account}></EditAccountForm>
         <Button variant="link" onClick={handleDelete}>Delete Account</Button>
 
         </div>

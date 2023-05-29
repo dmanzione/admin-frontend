@@ -18,7 +18,7 @@ import {
 
   UserDto,
 
-} from "../../../services/UserService";
+} from "../../../types/UserDto";
 
 function CheckingAccountForm() {
  
@@ -73,6 +73,7 @@ function CheckingAccountForm() {
       dateCreated: new Date(),
 
       balance: balance,
+
 
     };
     api

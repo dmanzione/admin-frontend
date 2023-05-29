@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import AccountType, { getAccountTypes } from "../../../types/AccountType";
 
 import Account from "../../../types/Account";
-import { UserDto } from "../../../services/UserService";
+import { UserDto } from "../../../types/UserDto";
 
 function CreditCardAccountForm() {
   const [balance, setBalance] = useState<number>(0);
@@ -59,7 +59,7 @@ function CreditCardAccountForm() {
       dateCreated: dateCreated,
 
       balance: balance,
-
+     
     };
     api
       .post("http://localhost:8080/accounts-api/accounts", account)

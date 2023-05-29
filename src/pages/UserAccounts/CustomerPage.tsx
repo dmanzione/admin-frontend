@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import UserService from "../../services/UserService";
+import UserService from "../../services/UserServiceJames";
 import User from "../../types/User";
 import Loader from "../../components/Loader";
 import NotFound from "../NotFound";

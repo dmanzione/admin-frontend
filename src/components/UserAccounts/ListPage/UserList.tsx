@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Col, Row, Table } from "react-bootstrap";
 import User from "../../../types/User";
 import UserElement from "./UserElement";
-import UserService from "../../../services/UserService";
+import UserService from "../../../services/UserServiceJames";
 import UserSearch from "./UserSearch";
 import { useNavigate } from "react-router-dom";
 

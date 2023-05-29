@@ -1,7 +1,7 @@
 import { ListGroup } from "react-bootstrap";
 
 import { Link } from "react-router-dom";
-import TransactionFormGeneral from "../../forms/Transactions/TransactionFormGeneral";
+import TransactionFormGeneral from "../Transactions/TransactionFormGeneral";
 
 export default function AccountForms() {
   return (

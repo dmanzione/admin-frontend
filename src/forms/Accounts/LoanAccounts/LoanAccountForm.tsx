@@ -1,4 +1,4 @@
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, FormGroup } from "react-bootstrap";
 import axios from "axios";
 import AccountStatus, {
   getAllAccountStatuses,
@@ -8,7 +8,9 @@ import { useEffect, useState } from "react";
 import AccountType, { getAccountTypes } from "../../../types/AccountType";
 
 import Account from "../../../types/Account";
-import { UserDto } from "../../../services/UserService";
+import { UserDto } from "../../../types/UserDto";
+import Loan from "../../../types/Loan";
+import FormRange from "react-bootstrap/esm/FormRange";
 
 function AccountForm() {
   const [balance, setBalance] = useState<number>(0);
@@ -23,6 +25,12 @@ function AccountForm() {
   const [agentId, setAgentId] = useState<string>();
   const [customerId, setCustomerId] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [accountPk, setAccountPk] = useState<number>(0);
+  const [interestRate, setInterestRate] = useState<number>(2.0);
+  const [termInMonths, setTermInMonths]= useState<number>(30);
+  const [principalAmount, setPrincipalAmount] = useState<number>(10000);
+  const [loan, setLoan] = useState<Loan>({interestRate: interestRate, termInMonths: termInMonths, principalAmount: principalAmount,numberOfPaymentsMade:0});
   // Create an Axios instance with the base URL
   const api = axios.create({
     headers: { "Access-Control-Allow-Origin": "*" },
@@ -61,7 +69,9 @@ function AccountForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dateCreated.setFullYear(dateCreated.getFullYear() + 30);
-    const account: Account = {
+    
+   
+    let account: Account = {
       type: type,
       status: status,
       customer: customer,
@@ -69,22 +79,41 @@ function AccountForm() {
       dateCreated: new Date(),
 
       balance: balance,
-      
+    
     };
+   
     api
       .post("http://localhost:8080/accounts-api/accounts", account)
       .then((res) => {
-
-        alert("Account created successfully");
+        setLoan({...loan, account: res.data});
+        const account:Account = res.data;
+        loan.account = account;
+        api.post("http://localhost:8080/accounts-api/loans/", loan).then((res) => {
+          alert("Account created successfully");
+       
+      }).catch((err) => {
+        console.error(err);
+        alert("Something went wrong when creating the loan");
+        setLoading(false);
+        // window.location.reload();
+      });
       })
       .catch((error) => {
         console.error(error);
         alert("An error occurred while creating the account");
+        setLoading(false);
+        // window.location.reload();
       });
+      
+     
+  
   };
 
   return (
     <Form onSubmit={handleSubmit}>
+      <Form.Text>
+        <h1> Account</h1>
+      </Form.Text>
       <Form.Group controlId="type">
         <Form.Label>Account Type</Form.Label>
         <Form.Control as="select" value={type} disabled={true}>
@@ -165,7 +194,51 @@ function AccountForm() {
         />
       </Form.Group>
       
+      <FormRange>
 
+ 
+
+      </FormRange>
+
+      <Form.Group controlId="principalAmount">
+        <Form.Label>Principal Amount</Form.Label>
+        <Form.Control
+          type="number"
+          value={principalAmount}
+          onChange={(e) => setPrincipalAmount(Number(e.target.value))}
+        />
+      </Form.Group>
+  
+      <Form.Group controlId="termInMonths">
+        <Form.Label>Term In Months</Form.Label>
+        <Form.Control
+          as="select"
+          value={termInMonths}
+          onChange={(e) => setTermInMonths(Number(e.target.value))}
+          defaultValue={termInMonths}
+        >
+          {Array.from({ length: 26 }, (_, i) => i + 5).map((fiveYear) => (
+            <option key={fiveYear} value={fiveYear}>
+              {fiveYear}
+            </option>
+          ))}
+        </Form.Control>
+      </Form.Group>
+      <FormGroup>
+        <Form.Label>Interest Rate</Form.Label>
+        <Form.Control
+         as="select"
+         value={interestRate}
+         onChange={(e) => setInterestRate(Number(e.target.value))}
+          defaultValue={interestRate}
+        >
+          {Array.from({ length: 19.5 }, (_,i)=> i+0.5).map((pointFive) => (
+            <option key={pointFive} value={pointFive}>
+              {pointFive}
+            </option>
+          ))}
+        </Form.Control>
+        </FormGroup>
       <Button variant="primary m-2" type="submit">
         Submit
       </Button>

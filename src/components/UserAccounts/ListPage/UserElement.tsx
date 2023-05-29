@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import User from "../../../types/User";
-import UserService from "../../../services/UserService";
+import UserService from "../../../services/UserServiceJames";
 
 type UserElementProps = {
   user: User;

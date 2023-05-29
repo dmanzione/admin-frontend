@@ -3,7 +3,7 @@ import NewUserTitle from "../../components/UserAccounts/NewPage/NewUserTitle";
 import FormComponent from "../../components/FormComponent";
 import { NewCustomerYup } from "../../validation/UserValidation";
 import { newUserForm } from "../../forms/UserAccount/userForms";
-import UserService from "../../services/UserService";
+import UserService from "../../services/UserServiceJames";
 import User from "../../types/User";
 import { useNavigate } from "react-router-dom";
 
