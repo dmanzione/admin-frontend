@@ -10,7 +10,7 @@ import Card from '../../types/Card';
 import Loan from '../../types/Loan';
 import Reward from '../../types/Reward';
 const useAccountId = () => {
-    // Replace this with your logic for retrieving the accountId
+   
     const accountId = useParams().accountId;
     return accountId;
 };
