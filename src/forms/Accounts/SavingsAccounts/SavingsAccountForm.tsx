@@ -27,6 +27,7 @@ function SavingsAccountForm() {
 
   const [balance, setBalance] = useState<number>(0);
 
+  
   const [dateCreated] = useState<Date>(new Date());
   const [type] = useState<AccountType>(AccountType.SAVINGS);
   const [agentId, setAgentId] = useState<string>("E-12345678");
