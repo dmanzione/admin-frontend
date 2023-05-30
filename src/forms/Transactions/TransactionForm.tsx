@@ -37,10 +37,10 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
   });
   useEffect(() => {
     api
-      .get("http://localhost:8080/accounts-api/accounts/accountslist")
+    .get("http://localhost:8080/accounts-api/accounts/?page=0&size=")
       .then((res) => {
-        setAccounts(res.data);
-        
+        setAccounts(res.data.content);
+        console.log(res.data.content)
   
       })
       .catch((err) => {
@@ -175,6 +175,8 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
           required={(transactionType === TransactionType.TRANSFER || transactionType === TransactionType.DEPOSIT)}
         
         >
+
+
           {accounts.map((account: Account) => {
             return (
               <option key={account.number} value={account.number!}>

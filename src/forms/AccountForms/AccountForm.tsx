@@ -150,8 +150,10 @@ function AccountForm() {
           }
         
         }
-        defaultValue={customerId}
+        required={true}
+        defaultValue={""}
         >
+          <option selected></option>
           {customers.map((customer) => (
             <option key={customer.id} value={customer.id}>
               {customer.firstName} {customer.lastName}
@@ -163,6 +165,7 @@ function AccountForm() {
         <Form.Label>Bank Agent Name</Form.Label>
         <Form.Control
           as="select"
+        
           value={agentId}
           onChange={(e) => {
             setAgentId(e.target.value);
@@ -173,13 +176,17 @@ function AccountForm() {
               }
             }
           }}
-          defaultValue={agentId}
+          
+          defaultChecked={false}
+          required={true}
         >
+          <option selected></option>
           {employees.map((employee) => (
             <option key={employee.id} value={employee.id}>
               {employee.firstName + " " + employee.lastName}
             </option>
           ))}
+
         </Form.Control>
       </Form.Group>
 

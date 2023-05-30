@@ -30,12 +30,13 @@ const TransactionFormGeneral: React.FC = (
   });
   useEffect(() => {
     api
-      .get("http://localhost:8080/accounts-api/accounts/accountslist")
+      .get("http://localhost:8080/accounts-api/accounts/?page=0&size=")
       .then((res) => {
-        let accountz = res.data;
-        setAccounts(accountz);
-        setToAccount(res.data[0]);
-        setFromAccount(res.data[0]);
+        
+
+        setAccounts(res.data.content);
+        setToAccount(accounts[0]);
+        setFromAccount(accounts[0]);
 
       })
       .catch((err) => {
