@@ -4,6 +4,7 @@ import { Table } from "react-bootstrap";
 import Transaction from "../../types/Transaction";
 import axios from "axios";
 import TransactionType from "../../types/TransactionType";
+import TransactionFormGeneral from "../../forms/Transactions/TransactionFormGeneral";
 
 const TransactionHistoryAll: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -31,6 +32,9 @@ const TransactionHistoryAll: React.FC = () => {
   return (
     <Table striped bordered hover>
       <thead>
+        <tr>
+          <TransactionFormGeneral />
+        </tr>
         <tr>
           <th>Transaction Type</th>
           <th>From </th>

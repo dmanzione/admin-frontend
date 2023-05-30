@@ -6,6 +6,8 @@ import { getName } from "../../types/AccountType";
 import Transaction from "../../types/Transaction";
 import TransactionType from "../../types/TransactionType";
 import { TransactionStatus } from "../../types/TransactionStatus";
+import FinancialProduct from "../../types/FinancialProduct";
+import Balance from "../../types/Balance";
 
 interface TransactionHistoryProps {
   account: Account;
@@ -131,14 +133,30 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
                   getName(account.type) +
                   " | " +
                   account.number 
-                  +" | $"
-                  + account.balance.toFixed(2)}
-              </option>
-            );
-          })}
+                +" "}
+
+                 { (account.financialProducts?.map((fp:FinancialProduct)=>(
+                    fp.name == "Balance" && 
+                      "$" + String((fp as Balance).amount!.toFixed(2)) || ""
+                    
+                  )))
+                 }
+                 </option>
+          )
+          
+          }
+                  
+                 
+                
+              
+            
+                
+        
+          )}
         </Form.Control>
       </Form.Group>
-}
+} 
+
       { (transactionType === TransactionType.TRANSFER || transactionType === TransactionType.DEPOSIT) && 
       <Form.Group controlId="toAccount">
         <Form.Label>To Account</Form.Label>
@@ -167,8 +185,14 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
                   getName(account.type) +
                   " | " +
                   account.number
-                  +" | $"
-                  + account.balance.toFixed(2)}
+                  +" "}
+
+                 { (account.financialProducts?.map((fp:FinancialProduct)=>(
+                    fp.name == "Balance" && 
+                      "$" + String((fp as Balance).amount!.toFixed(2)) || ""
+                    
+                  )))
+                 }
               </option>
             );
           })}

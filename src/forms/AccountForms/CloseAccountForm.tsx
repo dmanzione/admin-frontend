@@ -9,7 +9,7 @@ interface DeleteTransactionFormProps{
     account:Account;
 }
 const CloseAccountForm = ((props:DeleteTransactionFormProps)=>{
-    const [account, setAccount] = useState<Account>(props.account);
+    const [, setAccount] = useState<Account>(props.account);
     const closeAccount = ()=>{
         setAccount(acct => { return {...acct, status: AccountStatus.CLOSED}})
         

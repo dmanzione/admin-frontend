@@ -9,7 +9,7 @@ export default class Account {
   number?: string|null|undefined;
   customer: UserDto|null;
   dateCreated: Date|null  = null;
-  balance: number;
+
   status: AccountStatus=AccountStatus.OPEN;
   type: AccountType = AccountType.CHECKING;
   bankAgent:UserDto|null;
@@ -21,7 +21,7 @@ export default class Account {
     this.number = number;
     this.customer = owner;
  
-    this.balance = balance;
+ 
     this.bankAgent=bankAgent;
    
 
@@ -31,7 +31,7 @@ export default class Account {
 
  
   toString = ()=>{
-    return `    acct # = ${this.pk}, owner = ${this.customer?.firstName||'' + " " + this.customer?.lastName||''}, dateCreated = ${this.dateCreated||''}, balance = ${this.balance || ' '}, status = ${this.status || ' '}, type = ${this.type}`;
+    return `    acct # = ${this.pk}, owner = ${this.customer?.firstName||'' + " " + this.customer?.lastName||''}, dateCreated = ${this.dateCreated||''}, status = ${this.status || ' '}, type = ${this.type}`;
  
  }
  }

@@ -1,4 +1,3 @@
-import AccountType, { getAccountTypeInfo } from "./AccountType";
 import FinancialProduct from "./FinancialProduct";
 
 export default class Loan extends FinancialProduct {
@@ -10,12 +9,11 @@ export default class Loan extends FinancialProduct {
     totalInterestPaid?: number;
     remainingBalance?: number;
    
-    constructor(interestRate: number, termInMonths: number, principalAmount: number) {
+    constructor(){
         super("Loan");
-       
-        this.description = getAccountTypeInfo(AccountType.LOAN);
-        this.interestRate = interestRate;
-        this.termInMonths = termInMonths;
-        this.principalAmount = principalAmount;
+        this.interestRate = 2;
+        this.termInMonths = 30;
+        this.principalAmount = 20000;
     }
+   
 }

@@ -3,8 +3,11 @@ import axios from "axios";
 import {
   Table,
   Spinner,
- 
   Pagination,
+  Button,
+  Navbar,
+  Nav,
+  Container,
 } from "react-bootstrap";
 import Account from "../../types/Account";
 import { Link } from "react-router-dom";
@@ -19,13 +22,11 @@ const AccountsDashboard = () => {
   const [totalPages, setTotalPages] = useState(0);
   const baseURL = `http://localhost:8080/accounts-api/accounts?page=${page}&size=10`;
 
-
   const api = axios.create({
     baseURL,
     headers: { "Access-Control-Allow-Origin": "*" },
   });
 
- 
   const fetchAccounts = async () => {
     setLoading(true);
     try {
@@ -34,8 +35,6 @@ const AccountsDashboard = () => {
       );
       setAccounts(response.data.content);
       setTotalPages(response.data.totalPages);
-      
-      
     } catch (error) {
       console.error(error);
     }
@@ -44,9 +43,8 @@ const AccountsDashboard = () => {
 
   useEffect(() => {
     fetchAccounts();
+  }, [page]);
 
-  } ,[page]);
- 
   let items = [];
   for (let number = 1; number <= totalPages; number++) {
     items.push(
@@ -56,64 +54,54 @@ const AccountsDashboard = () => {
         onClick={() => setPage(number - 1)}
       >
         {number}
-      </Pagination.Item>,
+      </Pagination.Item>
     );
   }
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  const handleSortClick = (
-    field: keyof Account,
-    subfield?: string,
-  ) => {
+  const handleSortClick = (field: keyof Account, subfield?: string) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortField(field);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
-  
+
     if (subfield) {
       // sort by the specified subfield of the object field
-      if(field==="customer"){
-     
-        filteredAccounts = 
-        [...filteredAccounts].sort((a, b) =>
-          sortDirection === 'asc'
+      if (field === "customer") {
+        filteredAccounts = [...filteredAccounts].sort((a, b) =>
+          sortDirection === "asc"
             ? a.customer!.firstName > b.customer!.firstName
               ? 1
               : -1
             : a.customer!.lastName < b.customer!.lastName
             ? 1
-            : -1,
+            : -1
         );
-      }else if(field==="bankAgent"){
-
-        filteredAccounts = 
-        [...filteredAccounts].sort((a, b) =>
-          sortDirection === 'asc'
+      } else if (field === "bankAgent") {
+        filteredAccounts = [...filteredAccounts].sort((a, b) =>
+          sortDirection === "asc"
             ? a.bankAgent!.firstName > b.bankAgent!.firstName
               ? 1
               : -1
             : a.bankAgent!.lastName < b.bankAgent!.lastName
             ? 1
-            : -1,
+            : -1
         );
       }
-      
     } else {
       // sort by the specified field
-      filteredAccounts = 
-        [...filteredAccounts].sort((a, b) =>
-          sortDirection === 'asc'
-            ? a[field]! > b[field]!
-              ? 1
-              : -1
-            : a[field]! < b[field]!
+      filteredAccounts = [...filteredAccounts].sort((a, b) =>
+        sortDirection === "asc"
+          ? a[field]! > b[field]!
             ? 1
-            : -1,
-        
+            : -1
+          : a[field]! < b[field]!
+          ? 1
+          : -1
       );
     }
   };
@@ -121,30 +109,37 @@ const AccountsDashboard = () => {
   let filteredAccounts: Account[] = [];
 
   if (searchTerm) {
-  
     for (let i = 0; i < accounts.length; i++) {
       if (
-        
         Object.values(accounts[i])
           .join(" ")
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
       ) {
         filteredAccounts.push(accounts[i]);
-      }else {
-        
-        for(let j = 0; j < Object.values(accounts[i]).length; j++){
-          if(Object.values(accounts[i])[j]!==null){
-            if(Object.values(Object.values(accounts[i])[j]).toString().toLowerCase().includes(searchTerm.toLowerCase())){
+      } else {
+        for (let j = 0; j < Object.values(accounts[i]).length; j++) {
+          if (Object.values(accounts[i])[j] !== null) {
+            if (
+              Object.values(Object.values(accounts[i])[j])
+                .toString()
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+            ) {
               filteredAccounts.push(accounts[i]);
-             
+
               break;
-            }else {
-              for(let k = 0; k < Object.values(accounts[i])[j].length; k++){
-                if(Object.values(accounts[i])[j][k]!==null){
-                  if(Object.values(Object.values(accounts[i]))[j][k].toString().toLowerCase().includes(searchTerm.toLowerCase())){
+            } else {
+              for (let k = 0; k < Object.values(accounts[i])[j].length; k++) {
+                if (Object.values(accounts[i])[j][k] !== null) {
+                  if (
+                    Object.values(Object.values(accounts[i]))
+                      [j][k].toString()
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())
+                  ) {
                     filteredAccounts.push(accounts[i]);
-                   
+
                     break;
                   }
                 }
@@ -152,14 +147,11 @@ const AccountsDashboard = () => {
             }
           }
         }
-       
-     
-    
+      }
     }
+  } else {
+    filteredAccounts = accounts;
   }
-}else {
-  filteredAccounts = accounts;
-}
   if (sortField) {
     for (let i = 0; i < filteredAccounts.length - 1; i++) {
       for (let j = i + 1; j < filteredAccounts.length; j++) {
@@ -190,31 +182,49 @@ const AccountsDashboard = () => {
   }
 
   return (
-    <div>
-      <h2>Dashboard</h2>
-      <div>
-        <label htmlFor="searchInput">Search:</label>
-        <input id="searchInput" type="text" onChange={handleSearchChange} />
-      </div>
-      <button onClick={fetchAccounts}>Refresh</button>
+    <>
       {loading ? (
         <Spinner animation="border" />
       ) : (
         <>
-          <Table striped bordered hover>
+        <div className="d-flex justify-content-around border pt-2">
+               <Link to="/accounts/new">Open Account</Link>
+                <Link to="/accounts/types">See Account Types</Link>
+               
+                    <label htmlFor="searchInput">
+                      Search: &nbsp;&nbsp;
+                      <input
+                        id="searchInput"
+                        type="text"
+                        onChange={handleSearchChange}
+                      />
+                    </label>
+                  
+                  <Button variant="link" onClick={fetchAccounts}>Refresh</Button>
+              </div>
+          <Table striped bordered hover className="w-100 justify-content-between">
+            <thead className="w-100">
+         
             <thead>
+            </thead>  
+
               <tr>
                 <th onClick={() => handleSortClick("number")}>
                   Account Number
                 </th>
-                <th onClick={() => handleSortClick("customer","subfield")}>Customer</th>
+                <th onClick={() => handleSortClick("customer", "subfield")}>
+                  Customer
+                </th>
                 <th onClick={() => handleSortClick("dateCreated")}>
                   Date Created
                 </th>
-                <th onClick={() => handleSortClick("balance")}>Balance</th>
+
                 <th onClick={() => handleSortClick("status")}>Status</th>
                 <th onClick={() => handleSortClick("type")}>Type</th>
-                <th onClick={() => handleSortClick("bankAgent","subfield")}>Bank Agent</th>
+
+                <th onClick={() => handleSortClick("bankAgent", "subfield")}>
+                  Bank Agent
+                </th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -227,8 +237,10 @@ const AccountsDashboard = () => {
                       ? `${account.customer.firstName} ${account.customer.lastName}`
                       : "N/A"}
                   </td>
-                  { (account.dateCreated && <td>{account.dateCreated.toString().substring(0,10)}</td>) || <td>N/A</td>}
-                  <td>${account.balance.toFixed(2)}</td>
+                  {(account.dateCreated && (
+                    <td>{account.dateCreated.toString().substring(0, 10)}</td>
+                  )) || <td>N/A</td>}
+
                   <td>{account.status}</td>
                   <td>{account.type}</td>
                   <td>
@@ -238,22 +250,22 @@ const AccountsDashboard = () => {
                   </td>
                   <td>
                     <Link to={`/accounts/${account.pk}`}>See</Link>
+                    <br />
+                    <Link to={`/accounts/${account.pk}/edit`}>Edit</Link>
+                    <br />
+                    <Link to={`/accounts/${account.pk}/delete`}>Delete</Link>
                   </td>
                 </tr>
               ))}
-              
             </tbody>
-            
-        
           </Table>
-          <Pagination>{items}</Pagination>
-          
-         
+          <Pagination className="d-flex justify-content-center">
+            {items}
+          </Pagination>
         </>
       )}
-    </div>
+    </>
   );
 };
 
 export default AccountsDashboard;
-

@@ -21,6 +21,7 @@ import {
 
 } from "../../types/UserDto";
 import { type } from "@testing-library/user-event/dist/type";
+import Balance from "../../types/Balance";
 
 interface EditAccountFormProps {
     account: Account;
@@ -32,6 +33,7 @@ const EditAccountForm=((props:EditAccountFormProps)=>{
   const [employees, setEmployees] = useState<UserDto[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
+  const [balance, setBalance] = useState<Balance>(new Balance());
  
   const api = axios.create({
  
@@ -163,8 +165,8 @@ const EditAccountForm=((props:EditAccountFormProps)=>{
         <Form.Label>Balance</Form.Label>
         <Form.Control
           type="number"
-          value={account.balance}
-          onChange={(e) => setAccount({...account, balance: Number(e.target.value) })}
+          value={balance.amount}
+          onChange={(e) => setBalance({...balance, amount: Number(e.target.value) })}
           id="balance"
 
         />

@@ -8,6 +8,9 @@ import BranchRouter from './routers/BranchRouter';
 import { userLogin } from "./slices/auth";
 import { useAppDispatch, useAppSelector } from "./hooks/useApp";
 import AccountRouter from "./routers/AccountRouter";
+import HomePage from "./pages/HomePage";
+import RootTemplate from "./pages/RootTemplate";
+import TransactionRouter from "./routers/TransactionRouter";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -26,11 +29,15 @@ function App() {
   ) : (
     <Container>
       <Routes>
-        <Route path="/accounts/*" element={<AccountRouter />} />
-        <Route path="/users/*" element={<UserRouter />} />
-        <Route path="/branches/*" element={<BranchRouter />} />
+       
 
-        <Route path="/" element={<h1>Root Path!</h1>} />
+        <Route element={<RootTemplate/>} children={[
+          <Route path="/" element={<HomePage />} />,
+          <Route path="/transactions/*" element={<TransactionRouter />} />,
+ <Route path="/accounts/*" element={<AccountRouter />} />,
+ <Route path="/users/*" element={<UserRouter />} />,
+ <Route path="/branches/*" element={<BranchRouter />} />,
+        ]} />
       </Routes>
     </Container>
   );

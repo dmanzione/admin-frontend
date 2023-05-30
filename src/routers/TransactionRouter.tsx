@@ -10,32 +10,16 @@ import AccountsDashboard from "../pages/Accounts/AccountsDashboard";
 import AccountTypes from "../pages/Accounts/AccountTypes";
 import TransactionHistoryAll from "../components/Transactions/TransactionHistoryAll";
 import AccountForm from "../forms/AccountForms/AccountForm";
+import TransactionFormGeneral from "../forms/Transactions/TransactionFormGeneral";
 
-const AccountRouter: React.FC = () => {
+const TransactionRouter: React.FC = () => {
   return (
     
       <Routes>
-        <Route path="/" element={<AccountsTemplate/>} children={[
+        <Route path="/" element={<TransactionHistoryAll/>} children={[
         
         
-            <Route path="/" element={<AccountsDashboard/>} />,
-        <Route path="/new" element={<AccountForm/>} />,
-        
-        
-        
-        <Route
-          path="/:accountId" element={<AccountInfo/>} />,
-     
-        <Route
-          path="/types" element={<AccountTypes/>} />,
-       
-        
-          
-        <Route
-          path="/transaction-history" element={<TransactionHistoryAll/>} />,
-        
-        <Route
-          path="/:accountId/transactions/:transactionId" element={<TransactionInfo/>} />
+            <Route path="/new" element={<TransactionFormGeneral/>} />,
           
           ]
         }/>
@@ -43,4 +27,4 @@ const AccountRouter: React.FC = () => {
   );
 };
 
-export default AccountRouter;
+export default TransactionRouter;

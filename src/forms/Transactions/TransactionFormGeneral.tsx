@@ -5,11 +5,7 @@ import Account from "../../types/Account";
 import { getName } from "../../types/AccountType";
 import Transaction from "../../types/Transaction";
 import TransactionType from "../../types/TransactionType";
-import { TransactionStatus } from "../../types/TransactionStatus";
 
-interface TransactionHistoryProps {
-  account: Account;
-}
 
 const TransactionFormGeneral: React.FC = (
   
@@ -36,9 +32,11 @@ const TransactionFormGeneral: React.FC = (
     api
       .get("http://localhost:8080/accounts-api/accounts/accountslist")
       .then((res) => {
-        setAccounts(res.data);
-        setToAccount(accounts[0]||null)
-        
+        let accountz = res.data;
+        setAccounts(accountz);
+        setToAccount(res.data[0]);
+        setFromAccount(res.data[0]);
+
       })
       .catch((err) => {
         console.log(err);
