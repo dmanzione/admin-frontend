@@ -9,5 +9,7 @@ export default class FinancialProduct {
     description?:string;
     account?:Account;
     
-
+    constructor(name:string){
+        this.name = name;
+    }
 }

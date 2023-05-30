@@ -11,8 +11,8 @@ export default class Loan extends FinancialProduct {
     remainingBalance?: number;
    
     constructor(interestRate: number, termInMonths: number, principalAmount: number) {
-        super();
-        this.name = "Loan";
+        super("Loan");
+       
         this.description = getAccountTypeInfo(AccountType.LOAN);
         this.interestRate = interestRate;
         this.termInMonths = termInMonths;

@@ -11,10 +11,11 @@ import Account from "../../../types/Account";
 import { UserDto } from "../../../types/UserDto";
 import Loan from "../../../types/Loan";
 import FormRange from "react-bootstrap/esm/FormRange";
+import { useNavigate } from "react-router-dom";
+import React from "react";
 
 function AccountForm() {
   const [balance, setBalance] = useState<number>(0);
-  const [rate, setRate] = useState<number>(5);
   const [dateCreated] = useState<Date>(new Date());
   const [type] = useState<AccountType>(AccountType.LOAN);
   const [status, setStatus] = useState<AccountStatus>(AccountStatus.OPEN);
@@ -25,13 +26,11 @@ function AccountForm() {
   const [agentId, setAgentId] = useState<string>();
   const [customerId, setCustomerId] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
-
-  const [accountPk, setAccountPk] = useState<number>(0);
   const [interestRate, setInterestRate] = useState<number>(2.0);
   const [termInMonths, setTermInMonths]= useState<number>(30);
   const [principalAmount, setPrincipalAmount] = useState<number>(10000);
   const [loan, setLoan] = useState<Loan>({interestRate: interestRate, termInMonths: termInMonths, principalAmount: principalAmount,numberOfPaymentsMade:0});
-  // Create an Axios instance with the base URL
+  const navigate = useNavigate();
   const api = axios.create({
     headers: { "Access-Control-Allow-Origin": "*" },
   });
@@ -79,24 +78,18 @@ function AccountForm() {
       dateCreated: new Date(),
 
       balance: balance,
+      deleted:false,
+      financialProducts:[loan]
     
     };
    
     api
       .post("http://localhost:8080/accounts-api/accounts", account)
       .then((res) => {
-        setLoan({...loan, account: res.data});
-        const account:Account = res.data;
-        loan.account = account;
-        api.post("http://localhost:8080/accounts-api/loans/", loan).then((res) => {
-          alert("Account created successfully");
+       alert("Account created successfully");
+       navigate("/accounts/"+res.data.pk);
+
        
-      }).catch((err) => {
-        console.error(err);
-        alert("Something went wrong when creating the loan");
-        setLoading(false);
-        // window.location.reload();
-      });
       })
       .catch((error) => {
         console.error(error);
@@ -105,14 +98,14 @@ function AccountForm() {
         // window.location.reload();
       });
       
-     
+    
   
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Text>
-        <h1> Account</h1>
+         Account
       </Form.Text>
       <Form.Group controlId="type">
         <Form.Label>Account Type</Form.Label>
@@ -194,11 +187,7 @@ function AccountForm() {
         />
       </Form.Group>
       
-      <FormRange>
-
- 
-
-      </FormRange>
+      <Form.Text>Loan</Form.Text>
 
       <Form.Group controlId="principalAmount">
         <Form.Label>Principal Amount</Form.Label>
@@ -246,6 +235,4 @@ function AccountForm() {
   );
 }
 export default AccountForm;
-function setLoading(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}
+

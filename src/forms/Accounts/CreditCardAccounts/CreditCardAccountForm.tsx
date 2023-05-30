@@ -1,53 +1,70 @@
-import { Button, Form } from "react-bootstrap";
+import { Button,  Form } from "react-bootstrap";
 import axios from "axios";
+
 import AccountStatus, {
   getAllAccountStatuses,
   getStatus,
 } from "../../../types/AccountStatus";
 import { useEffect, useState } from "react";
-import AccountType, { getAccountTypes } from "../../../types/AccountType";
+import AccountType, {
+  getAccountTypes,
+ 
+} from "../../../types/AccountType";
 
+import Card from "../../../types/Card";
 import Account from "../../../types/Account";
-import { UserDto } from "../../../types/UserDto";
+
+import {
+
+  UserDto,
+
+} from "../../../types/UserDto";
+import InterestRate from "../../../types/InterestRate";
+import FinancialProduct from "../../../types/FinancialProduct";
+import { useNavigate } from "react-router-dom";
 
 function CreditCardAccountForm() {
+ 
+
   const [balance, setBalance] = useState<number>(0);
 
   const [dateCreated] = useState<Date>(new Date());
-  const [type] = useState<AccountType>(AccountType.CREDIT_CARD);
+  const [type] = useState<AccountType>(AccountType.SAVINGS);
+  const [agentId, setAgentId] = useState<string>("E-12345678");
+  const [customerId, setCustomerId] = useState<string>("C-12345678");
   const [status, setStatus] = useState<AccountStatus>(AccountStatus.OPEN);
+
   const [customers, setCustomers] = useState<UserDto[]>([]);
   const [employees, setEmployees] = useState<UserDto[]>([]);
   const [customer, setCustomer] = useState<UserDto | null>(null);
   const [employee, setEmployee] = useState<UserDto | null>(null);
-  const [agentId, setAgentId] = useState<string>();
-  const [customerId, setCustomerId] = useState<string>();
-  const [loading, setLoading] = useState<boolean>(false);
-  
+  const [card,setCard] = useState<Card>(new Card());
+  const [interestRate, setInterestRate] = useState<InterestRate>(new InterestRate());
+
+const baseURL = "http://localhost:8080/accounts-api/savings-accounts";
+
   // Create an Axios instance with the base URL
   const api = axios.create({
-  
+    baseURL,
     headers: { "Access-Control-Allow-Origin": "*" },
   });
-
   useEffect(() => {
     const fetchUsers = async () => {
-      setLoading(true);
      
-        api.get(
+      try {
+        const response = await api.get(
           "http://localhost:8080/accounts-api/users"
-        ).then((response) => {
-        setCustomers(response.data.filter((usr: UserDto) => usr.role === 3));
-        setEmployees(response.data.filter((usr: UserDto) => usr.role === 2 || usr.role === 1));
-    
-      }).catch ((error)=> {
+        );
+        setCustomers(response.data.filter((usr: UserDto) => usr.role === 3||usr.role===1));
+        setEmployees(response.data.filter((usr: UserDto) => usr.role === 2));
+      } catch (error) {
         console.error(error);
-      });
-      setLoading(false);
+      }
+      
     };
     fetchUsers();
   }, []);
- 
+const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dateCreated.setFullYear(dateCreated.getFullYear() + 30);
@@ -56,16 +73,21 @@ function CreditCardAccountForm() {
       status: status,
       customer: customer,
       bankAgent: employee,
-      dateCreated: dateCreated,
+
+      dateCreated: new Date(),
 
       balance: balance,
-     
+      deleted:false,
+      financialProducts:[card, interestRate]
+
     };
     api
       .post("http://localhost:8080/accounts-api/accounts", account)
       .then((res) => {
         console.log(res);
         alert("Account created successfully");
+        navigate("/accounts/"+res.data.pk);
+
       })
       .catch((error) => {
         console.error(error);
@@ -77,10 +99,10 @@ function CreditCardAccountForm() {
     <Form onSubmit={handleSubmit}>
       <Form.Group controlId="type">
         <Form.Label>Account Type</Form.Label>
-        <Form.Control as="select" value={type} disabled={true}>
-          {getAccountTypes().map((t) => (
-            <option key={t} value={t}>
-              {AccountType[t]}
+        <Form.Control as="select" value={type} disabled>
+          {getAccountTypes().map((type: AccountType) => (
+            <option key={type} value={type}>
+              {AccountType[type]}
             </option>
           ))}
         </Form.Control>
@@ -104,16 +126,15 @@ function CreditCardAccountForm() {
         <Form.Control
           as="select"
           value={customerId}
-          defaultValue={customer?.id}
           onChange={(e) => {
             setCustomerId(e.target.value);
             customers.forEach((cust: UserDto) => {
               if (cust.id === e.target.value) {
                 setCustomer(cust);
-                
               }
             });
           }}
+          required
         >
           {customers.map((customer) => (
             <option key={customer.id} value={customer.id}>
@@ -127,7 +148,6 @@ function CreditCardAccountForm() {
         <Form.Control
           as="select"
           value={agentId}
-          defaultValue={employee?.id}
           onChange={(e) => {
             setAgentId(e.target.value);
             for (let i = 0; i < employees.length; i++) {
@@ -136,6 +156,7 @@ function CreditCardAccountForm() {
               }
             }
           }}
+          required
         >
           {employees.map((employee) => (
             <option key={employee.id} value={employee.id}>
@@ -144,7 +165,18 @@ function CreditCardAccountForm() {
           ))}
         </Form.Control>
       </Form.Group>
-
+      <Form.Group controlId="interestRate">
+        <Form.Label>Interest Rate</Form.Label>
+        <Form.Control
+          type="number range"
+          value={interestRate.id}
+          onChange={(e) => {
+            setInterestRate({...interestRate, interestRate: Number(e.target.value) });
+          }}
+        >
+          { (interestRate!.interestRate! * 100).toFixed(2) + "%"}
+        </Form.Control>
+      </Form.Group>
       <Form.Group controlId="balance">
         <Form.Label>Balance</Form.Label>
         <Form.Control
@@ -153,7 +185,7 @@ function CreditCardAccountForm() {
           onChange={(e) => setBalance(Number(e.target.value))}
         />
       </Form.Group>
-     
+      
 
       <Button variant="primary m-2" type="submit">
         Submit
@@ -162,6 +194,3 @@ function CreditCardAccountForm() {
   );
 }
 export default CreditCardAccountForm;
-function setLoading(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}

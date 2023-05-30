@@ -4,8 +4,8 @@ import FinancialProduct from "./FinancialProduct";
 export default class Card extends FinancialProduct {
     
     constructor(){
-        super();
-        this.name = "Card";
+        super("Card");
+       
         this.description = getAccountTypeInfo(AccountType.CREDIT_CARD);
     }
 }

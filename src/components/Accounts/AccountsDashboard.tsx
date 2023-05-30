@@ -76,7 +76,7 @@ const AccountsDashboard = () => {
   
     if (subfield) {
       // sort by the specified subfield of the object field
-      if(field=="customer"){
+      if(field==="customer"){
      
         filteredAccounts = 
         [...filteredAccounts].sort((a, b) =>
@@ -88,7 +88,7 @@ const AccountsDashboard = () => {
             ? 1
             : -1,
         );
-      }else if(field=="bankAgent"){
+      }else if(field==="bankAgent"){
 
         filteredAccounts = 
         [...filteredAccounts].sort((a, b) =>

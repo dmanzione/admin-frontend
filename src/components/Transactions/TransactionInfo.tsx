@@ -8,8 +8,7 @@ import { useParams } from 'react-router-dom';
 
 
 const TransactionInfo: React.FC = () => {
- const [fromAccount, setFromAccount] = useState<Account>();
- const [toAccount, setToAccount] = useState<Account>(); 
+
  const [transaction, setTransaction] = useState<Transaction>();
  
  const baseURL = 'http://localhost:8080/accounts-api/transactions';
@@ -60,4 +59,4 @@ const TransactionInfo: React.FC = () => {
   );
 };
 
-export default Transaction;
+export default TransactionInfo;

@@ -74,7 +74,7 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
     <Button variant="link" onClick={()=>setShow(true)}>
       Initiate Transaction
     </Button>
-    <Modal show={show} onHide={() => setShow(false)}>
+    <Modal size="lg" show={show} onHide={() => setShow(false)}>
       <Modal.Header closeButton>
         <Modal.Title>Initiate Transaction</Modal.Title>
       </Modal.Header>
@@ -130,7 +130,9 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
                   " | " +
                   getName(account.type) +
                   " | " +
-                  account.number }
+                  account.number 
+                  +" | $"
+                  + account.balance.toFixed(2)}
               </option>
             );
           })}
@@ -164,7 +166,9 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
                   " | " +
                   getName(account.type) +
                   " | " +
-                  account.number}
+                  account.number
+                  +" | $"
+                  + account.balance.toFixed(2)}
               </option>
             );
           })}

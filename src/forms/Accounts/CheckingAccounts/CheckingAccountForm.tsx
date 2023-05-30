@@ -1,66 +1,56 @@
 import { Button, Form } from "react-bootstrap";
 import axios from "axios";
-
 import AccountStatus, {
   getAllAccountStatuses,
   getStatus,
 } from "../../../types/AccountStatus";
 import { useEffect, useState } from "react";
-import AccountType, {
-  getAccountTypes,
- 
-} from "../../../types/AccountType";
-
+import AccountType, { getAccountTypes } from "../../../types/AccountType";
 
 import Account from "../../../types/Account";
-
-import {
-
-  UserDto,
-
-} from "../../../types/UserDto";
+import { UserDto } from "../../../types/UserDto";
+import OverdraftProtection from "../../../types/OverdraftProtection";
+import FinancialProduct from "../../../types/FinancialProduct";
+import { useNavigate } from "react-router-dom";
 
 function CheckingAccountForm() {
- 
-
   const [balance, setBalance] = useState<number>(0);
 
   const [dateCreated] = useState<Date>(new Date());
   const [type] = useState<AccountType>(AccountType.CHECKING);
-  const [agentId, setAgentId] = useState<string>("E-12345678");
-  const [customerId, setCustomerId] = useState<string>("C-12345678");
   const [status, setStatus] = useState<AccountStatus>(AccountStatus.OPEN);
-
   const [customers, setCustomers] = useState<UserDto[]>([]);
   const [employees, setEmployees] = useState<UserDto[]>([]);
   const [customer, setCustomer] = useState<UserDto | null>(null);
   const [employee, setEmployee] = useState<UserDto | null>(null);
+  const [agentId, setAgentId] = useState<string>();
+  const [customerId, setCustomerId] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
-
-  const baseURL = "http://localhost:8080/accounts-api/checking-accounts";
-
-  // Create an Axios instance with the base URL
+  const [overdraftProtection, setOverdraftProtection] = useState<OverdraftProtection>(new OverdraftProtection());
   const api = axios.create({
-    baseURL,
+  
     headers: { "Access-Control-Allow-Origin": "*" },
   });
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
-      try {
-        const response = await api.get(
+     
+        api.get(
           "http://localhost:8080/accounts-api/users"
-        );
-        setCustomers(response.data.filter((usr: UserDto) => usr.role === 3||usr.role===1));
-        setEmployees(response.data.filter((usr: UserDto) => usr.role === 2));
-      } catch (error) {
+        ).then((response) => {
+        setCustomers(response.data.filter((usr: UserDto) => usr.role === 3));
+        setEmployees(response.data.filter((usr: UserDto) => usr.role === 2 || usr.role === 1));
+    
+      }).catch ((error)=> {
         console.error(error);
-      }
+      });
+     
       setLoading(false);
     };
     fetchUsers();
   }, []);
-
+ 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dateCreated.setFullYear(dateCreated.getFullYear() + 30);
@@ -69,33 +59,35 @@ function CheckingAccountForm() {
       status: status,
       customer: customer,
       bankAgent: employee,
-
-      dateCreated: new Date(),
+      dateCreated: dateCreated,
 
       balance: balance,
-
-
+      deleted:false,
+      financialProducts: new Array<FinancialProduct>(overdraftProtection),
+     
     };
     api
       .post("http://localhost:8080/accounts-api/accounts", account)
       .then((res) => {
         console.log(res);
         alert("Account created successfully");
+        navigate("/accounts/"+res.data.pk);
       })
       .catch((error) => {
         console.error(error);
-        alert("An error occurred while creating the account");
+        alert("An error occurred while creating the account" + error);
       });
+      
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group controlId="type">
         <Form.Label>Account Type</Form.Label>
-        <Form.Control as="select" value={type} disabled>
-          {getAccountTypes().map((type: AccountType) => (
-            <option key={type} value={type}>
-              {AccountType[type]}
+        <Form.Control as="select" value={type} disabled={true}>
+          {getAccountTypes().map((t) => (
+            <option key={t} value={t}>
+              {AccountType[t]}
             </option>
           ))}
         </Form.Control>
@@ -119,15 +111,16 @@ function CheckingAccountForm() {
         <Form.Control
           as="select"
           value={customerId}
+          defaultValue={customer?.id}
           onChange={(e) => {
             setCustomerId(e.target.value);
             customers.forEach((cust: UserDto) => {
               if (cust.id === e.target.value) {
                 setCustomer(cust);
+                
               }
             });
           }}
-          required
         >
           {customers.map((customer) => (
             <option key={customer.id} value={customer.id}>
@@ -141,6 +134,7 @@ function CheckingAccountForm() {
         <Form.Control
           as="select"
           value={agentId}
+          defaultValue={employee?.id}
           onChange={(e) => {
             setAgentId(e.target.value);
             for (let i = 0; i < employees.length; i++) {
@@ -149,7 +143,6 @@ function CheckingAccountForm() {
               }
             }
           }}
-          required
         >
           {employees.map((employee) => (
             <option key={employee.id} value={employee.id}>
@@ -167,7 +160,38 @@ function CheckingAccountForm() {
           onChange={(e) => setBalance(Number(e.target.value))}
         />
       </Form.Group>
+     
+      <Form.Group controlId="overdraftProtection">
       
+      <Form.Check>
+        <Form.Check.Input
+          type="checkbox"
+          checked={overdraftProtection.enabled}
+          onChange={(e) => {
+            setOverdraftProtection({
+            ...overdraftProtection,
+              enabled: e.target.checked,
+            });
+          }}
+        />
+        <Form.Check.Label>Enable Overdraft Protection</Form.Check.Label>
+      </Form.Check>
+      {overdraftProtection.enabled && (
+        <>
+          <Form.Label>Overdraft Limit</Form.Label>
+          <Form.Control
+            type="number"
+            value={overdraftProtection.overdraftLimit}
+            onChange={(e) => {
+              setOverdraftProtection({
+              ...overdraftProtection,
+                overdraftLimit: Number((e.target.value)||'0'),
+              });
+            }}
+          />
+          </>
+      )}
+        </Form.Group>
 
       <Button variant="primary m-2" type="submit">
         Submit
@@ -176,3 +200,6 @@ function CheckingAccountForm() {
   );
 }
 export default CheckingAccountForm;
+function setLoading(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}

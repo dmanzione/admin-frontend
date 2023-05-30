@@ -1,9 +1,8 @@
 import { UserDto } from "../types/UserDto";
 import AccountStatus from "./AccountStatus";
 import { AccountType } from "./AccountType";
-import Customer from "./Customer";
-import Employee from "./Employee";
 import FinancialProduct from "./FinancialProduct";
+
 
 export default class Account {
   pk?: number | null;
@@ -14,6 +13,8 @@ export default class Account {
   status: AccountStatus=AccountStatus.OPEN;
   type: AccountType = AccountType.CHECKING;
   bankAgent:UserDto|null;
+  deleted:boolean = false;
+  financialProducts:FinancialProduct[] = new Array<FinancialProduct>();
   
   constructor(pk: number, number: string, owner: UserDto, bankAgent:UserDto,  balance: number,  status: AccountStatus, type: AccountType) {
     this.pk = pk;

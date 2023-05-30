@@ -1,54 +1,45 @@
-import { Button, Form } from "react-bootstrap";
+import { Button, Container, Form, Modal } from "react-bootstrap";
 import axios from "axios";
+
 
 import AccountStatus, {
   getAllAccountStatuses,
   getStatus,
-} from "../../../types/AccountStatus";
-import { useEffect, useState } from "react";
+} from "../../types/AccountStatus";
+import React, {FC, useEffect, useState } from "react";
 import AccountType, {
   getAccountTypes,
  
-} from "../../../types/AccountType";
+} from "../../types/AccountType";
 
 
-import Account from "../../../types/Account";
+import Account from "../../types/Account";
 
 import {
 
   UserDto,
 
-} from "../../../types/UserDto";
-import InterestRate from "../../../types/InterestRate";
-import { useNavigate } from "react-router-dom";
+} from "../../types/UserDto";
+import { type } from "@testing-library/user-event/dist/type";
 
-function SavingsAccountForm() {
- 
+interface EditAccountFormProps {
+    account: Account;
+}
 
-  const [balance, setBalance] = useState<number>(0);
-
-  const [dateCreated] = useState<Date>(new Date());
-  const [type] = useState<AccountType>(AccountType.SAVINGS);
-  const [agentId, setAgentId] = useState<string>("E-12345678");
-  const [customerId, setCustomerId] = useState<string>("C-12345678");
-  const [status, setStatus] = useState<AccountStatus>(AccountStatus.OPEN);
-
+const EditAccountForm=((props:EditAccountFormProps)=>{
+  const [account,setAccount] = useState(props.account);
   const [customers, setCustomers] = useState<UserDto[]>([]);
   const [employees, setEmployees] = useState<UserDto[]>([]);
-  const [customer, setCustomer] = useState<UserDto | null>(null);
-  const [employee, setEmployee] = useState<UserDto | null>(null);
-  const [interestRate, setInterestRate] = useState<InterestRate>(new InterestRate());
-
-
-
-  // Create an Axios instance with the base URL
+  const [loading, setLoading] = useState<boolean>(false);
+  const [show, setShow] = useState<boolean>(false);
+ 
   const api = axios.create({
-
+ 
     headers: { "Access-Control-Allow-Origin": "*" },
   });
   useEffect(() => {
     const fetchUsers = async () => {
-     
+      setLoading(true);
       try {
         const response = await api.get(
           "http://localhost:8080/accounts-api/users"
@@ -58,47 +49,47 @@ function SavingsAccountForm() {
       } catch (error) {
         console.error(error);
       }
-      
+      setLoading(false);
     };
     fetchUsers();
   }, []);
-  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dateCreated.setFullYear(dateCreated.getFullYear() + 30);
-    const account: Account = {
-      type: type,
-      status: status,
-      customer: customer,
-      bankAgent: employee,
-
-      dateCreated: new Date(),
-
-      balance: balance,
-      deleted:false,
-      financialProducts: [interestRate]
-
-    };
-    api
-      .post("http://localhost:8080/accounts-api/accounts", account)
+   
+ 
+      api.put("http://localhost:8080/accounts-api/accounts/" + account.pk, account)
       .then((res) => {
         console.log(res);
-        alert("Account created successfully");
-        navigate("/accounts/"+res.data.pk);
-
+        alert("Account updated successfully");
+        window.location.reload();
       })
       .catch((error) => {
         console.error(error);
         alert("An error occurred while creating the account");
       });
   };
-
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAccount({ ...account, [e.target.id]: e.target.value })
+    
+  };
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   return (
+    <Container>
+
+    <Button variant="link" onClick={handleShow}>
+        Edit Account
+    </Button>
+    <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Account</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
     <Form onSubmit={handleSubmit}>
       <Form.Group controlId="type">
         <Form.Label>Account Type</Form.Label>
-        <Form.Control as="select" value={type} disabled>
+        <Form.Control as="select" value={account.type} id="type" disabled>
           {getAccountTypes().map((type: AccountType) => (
             <option key={type} value={type}>
               {AccountType[type]}
@@ -110,26 +101,28 @@ function SavingsAccountForm() {
         <Form.Label>Account Status</Form.Label>
         <Form.Control
           as="select"
-          value={status}
-          onChange={(e) => setStatus(getStatus(e.target.value))}
-        >
-          {getAllAccountStatuses().map((status) => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
+          value={account.status}
+          onChange={handleChange}
+          id="status">
+        {getAllAccountStatuses().map((status: AccountStatus) => (
+          <option key={status} value={status}>
+            {status}
+          </option>
+        ))}
         </Form.Control>
       </Form.Group>
       <Form.Group controlId="customer">
         <Form.Label>Customer Name</Form.Label>
         <Form.Control
           as="select"
-          value={customerId}
+          value={account.customer?.id}
+          id="customer"
           onChange={(e) => {
-            setCustomerId(e.target.value);
+           
             customers.forEach((cust: UserDto) => {
               if (cust.id === e.target.value) {
-                setCustomer(cust);
+               
+                setAccount({...account, customer: cust });
               }
             });
           }}
@@ -142,16 +135,17 @@ function SavingsAccountForm() {
           ))}
         </Form.Control>
       </Form.Group>
-      <Form.Group controlId="agent">
+      <Form.Group controlId="bankAgent">
         <Form.Label>Bank Agent Name</Form.Label>
         <Form.Control
           as="select"
-          value={agentId}
+          value={account.bankAgent?.id}
+          id="bankAgent"
           onChange={(e) => {
-            setAgentId(e.target.value);
+            
             for (let i = 0; i < employees.length; i++) {
               if (employees[i].id === e.target.value) {
-                setEmployee(employees[i]);
+                setAccount({...account, bankAgent: employees[i] });
               }
             }
           }}
@@ -169,8 +163,10 @@ function SavingsAccountForm() {
         <Form.Label>Balance</Form.Label>
         <Form.Control
           type="number"
-          value={balance}
-          onChange={(e) => setBalance(Number(e.target.value))}
+          value={account.balance}
+          onChange={(e) => setAccount({...account, balance: Number(e.target.value) })}
+          id="balance"
+
         />
       </Form.Group>
       
@@ -179,6 +175,14 @@ function SavingsAccountForm() {
         Submit
       </Button>
     </Form>
+    </Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={handleClose}>
+        Close
+      </Button>
+    </Modal.Footer>
+    </Modal>
+    </Container>
   );
-}
-export default SavingsAccountForm;
+});
+export default EditAccountForm;
