@@ -4,15 +4,18 @@ import { Route, Routes } from "react-router-dom";
 
 import { Container } from "react-bootstrap";
 import UserRouter from "./routers/UserRouter";
-import BranchRouter from './routers/BranchRouter';
+import BranchRouter from "./routers/BranchRouter";
 import { userLogin } from "./slices/auth";
 import { useAppDispatch, useAppSelector } from "./hooks/useApp";
 import AccountRouter from "./routers/AccountRouter";
 import HomePage from "./pages/HomePage";
 import RootTemplate from "./pages/RootTemplate";
 import TransactionRouter from "./routers/TransactionRouter";
+import CardRouter from "./routers/CardRouter";
 
 function App() {
+
+  
   const dispatch = useAppDispatch();
   const { loggedIn, loading } = useAppSelector((state) => ({
     loggedIn: state.auth.loggedIn,
@@ -29,15 +32,17 @@ function App() {
   ) : (
     <Container>
       <Routes>
-       
-
-        <Route element={<RootTemplate/>} children={[
-          <Route path="/" element={<HomePage />} />,
-          <Route path="/transactions/*" element={<TransactionRouter />} />,
- <Route path="/accounts/*" element={<AccountRouter />} />,
- <Route path="/users/*" element={<UserRouter />} />,
- <Route path="/branches/*" element={<BranchRouter />} />,
-        ]} />
+        <Route
+          element={<RootTemplate />}
+          children={[
+            <Route path="/" element={<HomePage />} />,
+            <Route path="/transactions/*" element={<TransactionRouter />} />,
+            <Route path="/accounts/*" element={<AccountRouter />} />,
+            <Route path="/users/*" element={<UserRouter />} />,
+            <Route path="/branches/*" element={<BranchRouter />} />,
+            <Route path="/cards/*" element={<CardRouter />} />,
+          ]}
+        />
       </Routes>
     </Container>
   );

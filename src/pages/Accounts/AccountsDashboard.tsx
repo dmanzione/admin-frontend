@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
 import {
   Table,
   Spinner,
@@ -10,7 +10,8 @@ import {
   Container,
 } from "react-bootstrap";
 import Account from "../../types/Account";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { rejects } from "assert";
 
 const AccountsDashboard = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -20,26 +21,28 @@ const AccountsDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const baseURL = `http://localhost:8080/accounts-api/accounts?page=${page}&size=10`;
+ const navigate = useNavigate();
 
   const api = axios.create({
-    baseURL,
-    headers: { "Access-Control-Allow-Origin": "*" },
+    
+    headers: { "Access-Control-Allow-Origin": "*","Authentication":   "Basic"  },
   });
 
   const fetchAccounts = async () => {
     setLoading(true);
-    try {
-      const response = await api.get(
+   
+       api.get(
         `http://localhost:8080/accounts-api/accounts?page=${page}&size=10`
-      );
-      setAccounts(response.data.content);
-      setTotalPages(response.data.totalPages);
-    } catch (error) {
-      console.error(error);
+      ).then((res) => {
+
+        setAccounts(res.data.content);
+        setTotalPages(res.data.totalPages);
+        setLoading(false);
+      }).catch(err=>{
+        console.log("There was an error when attempting to fetch accounts")
+        console.log("Error message: " + err.message)
+      })
     }
-    setLoading(false);
-  };
 
   useEffect(() => {
     fetchAccounts();

@@ -12,13 +12,14 @@ const UserRouter: React.FC = () => {
   return (
     <Container className="mt-3">
       <Routes>
+      <Route path="/" element={<UserBasePage />} />
+      <Route path="/customers" element={<CustCollectionPage />} />
         <Route path="/customers/new" element={<NewCustomerPage />} />
         <Route path="/customers/:id" element={<CustomerPage />} />
-        <Route path="/customers" element={<CustCollectionPage />} />
         <Route path="/employees/new" element={<NewEmployeePage />} />
         <Route path="/employees/:id" element={<EmployeePage />} />
         <Route path="/employees" element={<EmplCollectionPage />} />
-        <Route path="/" element={<UserBasePage />} />
+        <Route path="/:userId" element={<UserBasePage />} />
       </Routes>
     </Container>
   );

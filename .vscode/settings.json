@@ -1,3 +1,8 @@
 {
-    "npm-scripts.showStartNotification": false
+    "npm-scripts.showStartNotification": false,
+    "genieai.enableConversationHistory": true,
+    "genieai.openai.model": "gpt-4-32k",
+    "genieai.openai.organization": "org-7LtkLhyLQLix2tALyPBxBciV",
+    "editor.fontFamily": "Roboto, 'Courier New', monospace",
+    "workbench.colorTheme": "Visual Studio Dark"
 }

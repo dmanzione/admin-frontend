@@ -7,24 +7,23 @@ import Loader from "../../components/Loader";
 import NotFound from "../NotFound";
 import UserInfoCard from "../../components/UserAccounts/ViewPage/UserInfoCard";
 import UserActions from "../../components/UserAccounts/ViewPage/UserActions";
+import axios from "axios";
 
 const CustomerPage = () => {
-  const { id } = useParams();
+  const  {pk}  = useParams();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
-  const api = UserService.getInstance();
+  const api = axios.create({
+    headers: { "Access-Control-Allow-Origin": "*" },
+  })
+
 
   useEffect(() => {
+
     api
-      .getCustomer(id!)
-      .then((user) => {
-        setUser(user);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [api, id]);
+    .get(`http://localhost:8080/accounts-api/customers/${pk}`).then(res=>{setUser(res.data)}).catch(err=>{console.log("There was an error when attempting to fetch customer with primary key: " + pk)});
+  }, []);
 
   return (
     <>

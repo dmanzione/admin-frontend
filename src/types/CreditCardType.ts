@@ -5,11 +5,10 @@ export  enum CreditCardType {
     CASH_BACK_CREDIT_CARD = "CASH_BACK_CREDIT_CARD",
     TRAVEL_CREDIT_CARD = "TRAVEL_CREDIT_CARD",
     BUSINESS_CREDIT_CARD = "BUSINESS_CREDIT_CARD",
-    CO_BRANDED_CREDIT_CARD = "CO_BRANDED_CREDIT_CARD",
-    STORE_CREDIT_CARD = "STORE_CREDIT_CARD",
     STARTER_STUDENT_CREDIT_CARD = "STARTER_STUDENT_CREDIT_CARD",
     STARTER_SECURED_CREDIT_CARD = "STARTER_SECURED_CREDIT_CARD",
     STARTER_UNSECURED_CREDIT_CARD = "STARTER_UNSECURED_CREDIT_CARD",
+
     OTHER_CREDIT_CARD = "OTHER_CREDIT_CARD",
 
 
@@ -22,12 +21,29 @@ export function getCreditCardTypes(){
             CreditCardType.CASH_BACK_CREDIT_CARD,
             CreditCardType.TRAVEL_CREDIT_CARD,
             CreditCardType.BUSINESS_CREDIT_CARD,
-            CreditCardType.CO_BRANDED_CREDIT_CARD,
-            CreditCardType.STORE_CREDIT_CARD,
             CreditCardType.STARTER_STUDENT_CREDIT_CARD,
             CreditCardType.STARTER_SECURED_CREDIT_CARD,
-            CreditCardType.STARTER_UNSECURED_CREDIT_CARD
+            CreditCardType.STARTER_UNSECURED_CREDIT_CARD,
+            CreditCardType.OTHER_CREDIT_CARD
         ]
+}
+
+interface CardsDashboardItem {
+    imageUrl: string;
+    linkUrl: string;
+    description: string;
+  }
+export function getCreditCardDashboardItems(): Array<CardsDashboardItem> {
+
+    return [
+        {imageUrl: "assets/credit card pics/Rewards.png", linkUrl: "#", description: "Rewards Credit Card"},
+        {imageUrl: "assets/credit card pics/Binary Cash.png", linkUrl: "#", description: "Cash Back Credit Card"},
+        {imageUrl: "assets/credit card pics/Binary Air.png", linkUrl: "#", description: "Travel Credit Card"},
+        {imageUrl: "assets/credit card pics/Binary Business.png", linkUrl: "#", description: "Business Credit Card"},
+        {imageUrl: "assets/credit card pics/Binary Student.png", linkUrl: "#", description: "Starter Student Credit Card"},
+        {imageUrl: "assets/credit card pics/Starter Secured.png", linkUrl: "#", description: "Starter Secured Credit Card"},
+        {imageUrl: "assets/credit card pics/Binary Green.png", linkUrl: "#", description: "Starter Unsecured Credit Card"},
+    ]
 }
 export function getCreditCardType(type: string): CreditCardType  {
 
@@ -40,10 +56,6 @@ export function getCreditCardType(type: string): CreditCardType  {
             return CreditCardType.TRAVEL_CREDIT_CARD;
         case "business credit card":
             return CreditCardType.BUSINESS_CREDIT_CARD;
-        case "co-branded credit card":
-            return CreditCardType.CO_BRANDED_CREDIT_CARD;
-        case "store credit card":
-            return CreditCardType.STORE_CREDIT_CARD;
         case "starter student credit card":
             return CreditCardType.STARTER_STUDENT_CREDIT_CARD;
         case "starter student secure credit card":
@@ -51,8 +63,7 @@ export function getCreditCardType(type: string): CreditCardType  {
         case "starter student unsecured credit card":
             return CreditCardType.STARTER_UNSECURED_CREDIT_CARD;
         default:
-            return CreditCardType.REWARDS_CREDIT_CARD;
-            break;
+            return CreditCardType.OTHER_CREDIT_CARD;
     }
     }
 
@@ -67,10 +78,6 @@ export function getCreditCardType(type: string): CreditCardType  {
                 return "Travel Credit Card";
             case CreditCardType.BUSINESS_CREDIT_CARD:
                 return "Business Credit Card";
-            case CreditCardType.CO_BRANDED_CREDIT_CARD:
-                return "Co-Branded Credit Card";
-            case CreditCardType.STORE_CREDIT_CARD:
-                return "Store Credit Card";
             case CreditCardType.STARTER_STUDENT_CREDIT_CARD:
                 return "Starter Student Credit Card";
             case CreditCardType.STARTER_SECURED_CREDIT_CARD:
@@ -78,7 +85,6 @@ export function getCreditCardType(type: string): CreditCardType  {
             case CreditCardType.STARTER_UNSECURED_CREDIT_CARD:
                 return "Starter Student Unsecure Credit Card";
             default:
-                return "Rewards Credit Card";
-                break;
+                return "Other Credit Card";
         }
     }

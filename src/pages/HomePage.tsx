@@ -1,7 +1,11 @@
 import { CardGroup, Card, Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage (){
+  const navigate = useNavigate();
 
+  
+    
     return(
         <Container fluid>
         <div className=" text-center">
@@ -24,7 +28,7 @@ export default function HomePage (){
             </Card.Body>
           </Card>
           <Card>
-            <Card.Img variant="top" src="https://react-bootstrap.github.io/thumbnail.png" />
+          
             <Card.Header>Profile Actions</Card.Header>
             <Card.Body>
                 <p></p>
