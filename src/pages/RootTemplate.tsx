@@ -16,7 +16,7 @@ const HomePage = () => {
         <h1>{document.title}</h1>
       </div>
       <Navbar variant="primary" expand="lg">
-        <Navbar.Brand href="#">Binary Bank</Navbar.Brand>
+        <Navbar.Brand href="/">Binary Bank</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
         <Navbar.Collapse id="basic-navbar-nav">
@@ -26,7 +26,6 @@ const HomePage = () => {
             <Nav.Link href="/transactions">Transactions</Nav.Link>
             <Nav.Link href="/cards">Cards</Nav.Link>
             <Nav.Link href="/branches">Branches</Nav.Link>
-            <Nav.Link href="/profile">Profile</Nav.Link>
           </Nav>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end well">

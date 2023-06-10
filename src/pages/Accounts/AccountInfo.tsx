@@ -3,7 +3,7 @@ import axios from "axios";
 import Account from "../../types/Account";
 import { useParams } from "react-router-dom";
 import TransactionForm from "../../forms/Transactions/TransactionForm";
-import TransactionHistory from "../../components/Transactions/TransactionHistory";
+import TransactionHistory from "../Transactions/TransactionHistory";
 import { Table } from "react-bootstrap";
 import AccountType from "../../types/AccountType";
 

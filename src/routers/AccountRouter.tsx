@@ -5,10 +5,10 @@ import  AccountsTemplate from "../pages/Accounts/AccountsTemplate";
 import AccountInfo from "../pages/Accounts/AccountInfo";
 
 import LoanAccountForm from "../forms/AccountForms/AccountForm";
-import TransactionInfo from "../components/Transactions/TransactionInfo";
+import TransactionInfo from "../pages/Transactions/TransactionInfo";
 import AccountsDashboard from "../pages/Accounts/AccountsDashboard";
 import AccountTypes from "../pages/Accounts/AccountTypes";
-import TransactionHistoryAll from "../components/Transactions/TransactionHistoryAll";
+import TransactionHistoryAll from "../pages/Transactions/TransactionHistoryAll";
 import AccountForm from "../forms/AccountForms/AccountForm";
 
 const AccountRouter: React.FC = () => {
