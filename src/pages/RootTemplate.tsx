@@ -5,15 +5,20 @@ import {
  
   Button,
   Collapse,
+  Image,
 } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const styles = {
+    width: "200px",
+    margin:'0'
+  }
   return (
     <>
-      <div className="container-fluid p-5 bg-secondary text-white text-center">
-        <h1>{document.title}</h1>
+      <div className="container-fluid p-0">
+        <Image src="assets/logo-black.png" alt="logo" style={styles} ></Image>
       </div>
       <Navbar variant="primary" expand="lg">
         <Navbar.Brand href="/">Binary Bank</Navbar.Brand>
