@@ -105,9 +105,8 @@ function AccountForm() {
     
   
   };
-
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} >
       <Form.Text>
          Account
       </Form.Text>

@@ -1,0 +1,13 @@
+Form {
+    margin:10%;
+    padding:5%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+body div {
+    background-color:whitesmoke(184, 219, 250) !important;
+}
+
+body  div div {
+    background-color: white!important;
+}

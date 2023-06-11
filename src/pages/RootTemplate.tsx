@@ -17,10 +17,10 @@ const HomePage = () => {
   }
   return (
     <>
-      <div className="container-fluid p-0">
+      <div className="container-fluid p-0 text-center ">
         <Image src="assets/logo-black.png" alt="logo" style={styles} ></Image>
       </div>
-      <Navbar variant="primary" expand="lg">
+      <Navbar className=" p-3 bg-outline-secondary" expand="lg">
         <Navbar.Brand href="/">Binary Bank</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
