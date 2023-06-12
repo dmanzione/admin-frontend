@@ -123,6 +123,7 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
           required={(transactionType === TransactionType.TRANSFER || transactionType === TransactionType.WITHDRAWAL)}
          
         >
+          <option selected>Select Account</option>
           {accounts.map((account: Account) => {
             return (
               <option key={account.number} value={account.number!}>
@@ -176,6 +177,7 @@ const TransactionForm: React.FC<TransactionHistoryProps> = (
         
         >
 
+<option selected>Select Account</option>
 
           {accounts.map((account: Account) => {
             return (

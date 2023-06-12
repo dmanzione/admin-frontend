@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   Nav,
@@ -7,10 +7,11 @@ import {
   Collapse,
   Image,
 } from "react-bootstrap";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const loggedIn = useState<boolean>(false);
   const styles = {
     width: "200px",
     margin:'0'
@@ -21,22 +22,25 @@ const HomePage = () => {
         <Image src="assets/logo-black.png" alt="logo" style={styles} ></Image>
       </div>
       <Navbar className=" p-3 bg-outline-secondary" expand="lg">
-        <Navbar.Brand href="/">Binary Bank</Navbar.Brand>
+        <Navbar.Brand href="/"><Image src="assets/logo-black.png" width={50}></Image></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-        <Navbar.Collapse id="basic-navbar-nav">
+        <Navbar.Collapse id="basic-navbar-nav" className="d-flex justify-content-between">
           <Nav className="mr-auto">
-            <Nav.Link href="/users/customers">Customer Profiles</Nav.Link>
-            <Nav.Link href="/accounts">Accounts</Nav.Link>
-            <Nav.Link href="/transactions">Transactions</Nav.Link>
-            <Nav.Link href="/cards">Cards</Nav.Link>
-            <Nav.Link href="/branches">Branches</Nav.Link>
+            <NavLink className="btn btn-sm btn-outline-secondary border-light well" to="/accounts">Accounts</NavLink>
+            <NavLink className="btn btn-sm btn-outline-secondary border-light well" to="/transactions">Transactions</NavLink>
+            <NavLink className="btn btn-sm btn-outline-secondary border-light well" to="/cards">Cards</NavLink>
+            <NavLink className="btn btn-sm btn-outline-secondary border-light well" to="/branches">Branches</NavLink>
           </Nav>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end well">
           <span className="well">
-            <button className="btn btn-sm btn-outline-secondary border-light well">Log Out</button>
-            <button className="btn btn-sm btn-outline-secondary border-light well">Log In</button>
+            {loggedIn  &&
+            <NavLink to={'/login'} className="btn btn-sm btn-outline-secondary border-light well">Log In</NavLink>
+
+} {!loggedIn &&
+            <NavLink to={'/logout'} className="btn btn-sm btn-outline-secondary border-light well">Log Out</NavLink>
+}
           </span>
         </Navbar.Collapse>
       </Navbar>

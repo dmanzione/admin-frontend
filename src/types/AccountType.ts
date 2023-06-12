@@ -5,8 +5,7 @@ export enum AccountType {
     CHECKING="CHECKING",
     SAVINGS="SAVINGS",
     CREDIT_CARD = "CREDIT_CARD",
-    LOAN="LOAN",
-    REWARDS_PROGRAM="REWARDS_PROGRAM"
+    LOAN="LOAN"
 
 }
 
@@ -21,8 +20,7 @@ export function getType(type: string): AccountType  {
             return AccountType.CREDIT_CARD;
         case 'loan':
             return AccountType.LOAN;
-        case'rewards program':
-            return AccountType.REWARDS_PROGRAM;
+       
         default:
             return AccountType.CHECKING;
     }
@@ -33,8 +31,7 @@ export function getAccountTypes(){
         AccountType.CHECKING,
         AccountType.SAVINGS,
         AccountType.CREDIT_CARD,
-        AccountType.LOAN,
-        AccountType.REWARDS_PROGRAM
+        AccountType.LOAN
     ]
 }
 
@@ -49,8 +46,7 @@ export function getName(type: AccountType): string {
             return "Loan";
         case AccountType.CREDIT_CARD:
             return "Credit";
-        case AccountType.REWARDS_PROGRAM:
-            return "Rewards Program";
+        
         
         default:
             return "Checking";

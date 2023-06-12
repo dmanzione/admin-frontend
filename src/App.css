@@ -11,3 +11,11 @@ body div {
 body  div div {
     background-color: white!important;
 }
+* {
+    font-size:13px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+}
+
+.navbar,.nav {
+    font-size:14px!important;
+}

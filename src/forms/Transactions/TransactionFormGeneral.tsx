@@ -122,6 +122,8 @@ const TransactionFormGeneral: React.FC = (
           required={(transactionType === TransactionType.TRANSFER || transactionType === TransactionType.WITHDRAWAL)}
          
         >
+                    <option selected>Select Account</option>
+
           {accounts.map((account: Account) => {
             return (
               <option key={account.number} value={account.number!}>
@@ -156,6 +158,8 @@ const TransactionFormGeneral: React.FC = (
           required={(transactionType === TransactionType.TRANSFER || transactionType === TransactionType.DEPOSIT)}
         
         >
+                    <option selected>Select Account</option>
+
           {accounts.map((account: Account) => {
             return (
               <option key={account.number} value={account.number!}>

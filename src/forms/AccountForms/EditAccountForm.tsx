@@ -10,7 +10,7 @@ import AccountType, { getAccountTypes } from "../../types/AccountType";
 
 import Account from "../../types/Account";
 
-import { UserDto } from "../../types/UserDto";
+import  User  from "../../types/User";
 import { type } from "@testing-library/user-event/dist/type";
 import Balance from "../../types/Balance";
 
@@ -20,8 +20,8 @@ interface EditAccountFormProps {
 
 const EditAccountForm = (props: EditAccountFormProps) => {
   const [account, setAccount] = useState(props.account);
-  const [customers, setCustomers] = useState<UserDto[]>([]);
-  const [employees, setEmployees] = useState<UserDto[]>([]);
+  const [customers, setCustomers] = useState<User[]>([]);
+  const [employees, setEmployees] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
   const [balance, setBalance] = useState<Balance>(new Balance());
@@ -38,10 +38,10 @@ const EditAccountForm = (props: EditAccountFormProps) => {
         );
         setCustomers(
           response.data.filter(
-            (usr: UserDto) => usr.role === 3 || usr.role === 1
+            (usr: User) => usr.role === 3 || usr.role === 1
           )
         );
-        setEmployees(response.data.filter((usr: UserDto) => usr.role === 2));
+        setEmployees(response.data.filter((usr: User) => usr.role === 2));
       } catch (error) {
         console.error(error);
       }
@@ -113,7 +113,7 @@ const EditAccountForm = (props: EditAccountFormProps) => {
                 value={account.customer?.id}
                 id="customer"
                 onChange={(e) => {
-                  customers.forEach((cust: UserDto) => {
+                  customers.forEach((cust: User) => {
                     if (cust.id === e.target.value) {
                       setAccount({ ...account, customer: cust });
                     }

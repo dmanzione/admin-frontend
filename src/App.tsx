@@ -5,31 +5,24 @@ import { Route, Routes } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import UserRouter from "./routers/UserRouter";
 import BranchRouter from "./routers/BranchRouter";
-import { userLogin } from "./slices/auth";
-import { useAppDispatch, useAppSelector } from "./hooks/useApp";
+
+
 import AccountRouter from "./routers/AccountRouter";
 import HomePage from "./pages/HomePage";
 import RootTemplate from "./pages/RootTemplate";
 import TransactionRouter from "./routers/TransactionRouter";
 import CardRouter from "./routers/CardRouter";
+import LoginPage from "./forms/UserAccount/LoginPage";
+import SignupPage from "./forms/UserAccount/SignupPage";
 
 function App() {
 
   
-  const dispatch = useAppDispatch();
-  const { loggedIn, loading } = useAppSelector((state) => ({
-    loggedIn: state.auth.loggedIn,
-    loading: state.auth.loading,
-  }));
 
-  useEffect(() => {
-    const token = localStorage.getItem("tokenLoader");
-    if (token) dispatch(userLogin({ token }));
-  }, [dispatch]);
 
-  return loading ? (
-    <h1>Loading Auth!</h1>
-  ) : (
+
+  
+  return (
     <Container>
       <Routes>
         <Route
@@ -41,6 +34,8 @@ function App() {
             <Route path="/users/*" element={<UserRouter />} />,
             <Route path="/branches/*" element={<BranchRouter />} />,
             <Route path="/cards/*" element={<CardRouter />} />,
+            <Route path="/login" element={<LoginPage/>} />,
+            <Route path='/signup' element={<SignupPage/>} />
           ]}
         />
       </Routes>

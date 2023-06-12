@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import AccountType, { getAccountTypes, getType } from "../../types/AccountType";
 
 import Account from "../../types/Account";
-import { UserDto } from "../../types/UserDto";
+import  User  from "../../types/User";
 import Loan from "../../types/Loan";
 import FormRange from "react-bootstrap/esm/FormRange";
 import { useNavigate } from "react-router-dom";
@@ -25,10 +25,10 @@ function AccountForm() {
   const [dateCreated] = useState<Date>(new Date());
   const [type,setType] = useState<AccountType>(AccountType.LOAN);
   const [status, setStatus] = useState<AccountStatus>(AccountStatus.OPEN);
-  const [customers, setCustomers] = useState<UserDto[]>([]);
-  const [employees, setEmployees] = useState<UserDto[]>([]);
-  const [customer, setCustomer] = useState<UserDto | null>(null);
-  const [employee, setEmployee] = useState<UserDto | null>(null);
+  const [customers, setCustomers] = useState<User[]>([]);
+  const [employees, setEmployees] = useState<User[]>([]);
+  const [customer, setCustomer] = useState<User | null>(null);
+  const [employee, setEmployee] = useState<User | null>(null);
   const [agentId, setAgentId] = useState<string>();
   const [customerId, setCustomerId] = useState<string>();
   const [, setLoading] = useState<boolean>(false);
@@ -45,10 +45,10 @@ function AccountForm() {
       api
         .get("http://localhost:8080/accounts-api/users")
         .then((res) => {
-          setCustomers(res.data.filter((usr: UserDto) => usr.role === 3));
+          setCustomers(res.data.filter((usr: User) => usr.role === 3));
        
           setEmployees(
-            res.data.filter((usr: UserDto) => usr.role === 2 || usr.role === 1)
+            res.data.filter((usr: User) => usr.role === 2 || usr.role === 1)
           );
           if (customers.length >= 1) {
             setCustomerId(customers[0].id);
@@ -141,7 +141,7 @@ function AccountForm() {
           value={customerId}
           onChange={(e) => {
             setCustomerId(e.target.value);
-            customers.forEach((cust: UserDto) => {
+            customers.forEach((cust: User) => {
               if (cust.id === e.target.value) {
                 setCustomer(cust);
               }
@@ -150,7 +150,6 @@ function AccountForm() {
         
         }
         required={true}
-        defaultValue={""}
         >
           <option selected></option>
           {customers.map((customer) => (
@@ -176,7 +175,6 @@ function AccountForm() {
             }
           }}
           
-          defaultChecked={false}
           required={true}
         >
           <option selected></option>
@@ -197,7 +195,6 @@ function AccountForm() {
        as="select"
        value={interestRate.interestRate}
        onChange={(e) => setInterestRate({ ...interestRate, interestRate: Number(e.target.value) })}
-        defaultValue={interestRate.interestRate}
       >
         {Array.from({ length: 19.5 }, (_,i=2)=> i+0.5).map((pointFive) => (
           <option key={pointFive} value={pointFive}>
@@ -267,7 +264,6 @@ function AccountForm() {
           as="select"
           value={termInMonths}
           onChange={(e) => setTermInMonths(Number(e.target.value))}
-          defaultValue={termInMonths}
         >
           {Array.from({ length: 26 }, (_, i) => i + 5).map((fiveYear) => (
             <option key={fiveYear} value={fiveYear}>
@@ -282,7 +278,6 @@ function AccountForm() {
          as="select"
          value={interestRate.interestRate}
          onChange={(e) => setInterestRate({ ...interestRate, interestRate: Number(e.target.value) })}
-          defaultValue={interestRate.interestRate}
         >
           {Array.from({ length: 19.5 }, (_,i)=> i+0.5).map((pointFive) => (
             <option key={pointFive} value={pointFive}>
